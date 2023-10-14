@@ -1,6 +1,5 @@
-package com.softpie.karabiner.ui.theme
+package com.softpie.karabiner.component.theme
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
