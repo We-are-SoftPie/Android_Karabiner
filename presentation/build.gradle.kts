@@ -51,6 +51,12 @@ android {
 }
 
 dependencies {
+    // keyboard
+    implementation("tech.thdev:extensions-compose-keyboard-state:1.3.2")
+
+    // navigation
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     // retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

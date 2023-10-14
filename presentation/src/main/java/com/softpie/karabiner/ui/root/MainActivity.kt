@@ -1,16 +1,26 @@
 package com.softpie.karabiner.ui.root
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.softpie.karabiner.component.button.ButtonType
 import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.theme.Body
@@ -20,38 +30,37 @@ import com.softpie.karabiner.component.theme.KarabinerTheme
 import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.Title
 import com.softpie.karabiner.ui.signup.Signup
+import tech.thdev.compose.extensions.keyboard.state.MutableExKeyboardStateSource
+import tech.thdev.compose.extensions.keyboard.state.foundation.removeFocusWhenKeyboardIsHidden
+import tech.thdev.compose.extensions.keyboard.state.localowners.LocalMutableExKeyboardStateSourceOwner
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            val navController = rememberNavController()
+
             KarabinerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+
+                Box(
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.systemBars)
                 ) {
-                    Column {
-
-                        KarabinerButton(text = "신고하기") {
-
+                    Box(
+                        modifier = Modifier
+                            .windowInsetsPadding(WindowInsets.safeDrawing)
+                    )
+                    CompositionLocalProvider(
+                        LocalMutableExKeyboardStateSourceOwner provides MutableExKeyboardStateSource() // 2
+                    ) {
+                        Scaffold(
+                            modifier = Modifier
+                                .removeFocusWhenKeyboardIsHidden()
+                        ) {
+                            NavigationGraph(navController = navController)
                         }
-                        KarabinerButton(text = "신고하기", karabinerable = true) {
-
-                        }
-                        KarabinerButton(text = "신고하기", type = ButtonType.Gray) {
-
-                        }
-                        KarabinerButton(text = "신고하기", type = ButtonType.Gray, enabled = false) {
-
-                        }
-                        KarabinerButton(text = "신고하기", type = ButtonType.Transparent) {
-
-                        }
-                        Title(text = "어쩌라고", karabinerable = true)
-                        Headline(text = "어쩌라고", karabinerable = true)
-                        Body(text = "어쩌라고", karabinerable = true)
-                        Label(text = "어쩌라고", karabinerable = true)
-                        Caption(text = "어쩌라고", karabinerable = true)
                     }
                 }
             }
