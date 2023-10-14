@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,6 +40,7 @@ fun KarabinerButton(
     text: String,
     type: ButtonType = ButtonType.Black,
     karabinerable: Boolean = false,
+    isShadow: Boolean = true,
     enabled: Boolean = true,
     shape: Shape = KarabinerTheme.shape.semiLarge,
     border: BorderStroke? = null,
@@ -57,8 +59,14 @@ fun KarabinerButton(
             disabledContainerColor = type.disableColor
         )
 
+    val addModifier = if (type != ButtonType.Transparent && isShadow) Modifier.karaOuterShadow(
+        color = KarabinerColor.Black,
+        cornerRadius = KarabinerRadius.semiLarge,
+        offsetY = 4.dp
+    ) else Modifier
     Button(
-        modifier = modifier,
+        modifier = modifier
+            .then(addModifier),
         onClick = onClick,
         enabled = enabled,
         shape = shape,
@@ -67,7 +75,8 @@ fun KarabinerButton(
         contentPadding = PaddingValues(),
         border = border,
     ) {
-        Box(
+        Surface(
+            color = KarabinerColor.Transparent,
             modifier = Modifier
                 .background(
                     if (karabinerable) gradient else Brush.linearGradient(
@@ -78,15 +87,10 @@ fun KarabinerButton(
                     )
                 )
                 .padding(contentPadding)
-                .karaOuterShadow(
-                    color = KarabinerColor.Black,
-                    offsetY = 4.dp,
-                    cornerRadius = KarabinerRadius.semiLarge,
-                )
                 .then(modifier),
-            contentAlignment = Alignment.Center
         ) {
             Headline(
+                modifier = Modifier,
                 text = text,
                 textColor = if (karabinerable) KarabinerColor.White else contentColorFor(
                     if (enabled) type.buttonColor

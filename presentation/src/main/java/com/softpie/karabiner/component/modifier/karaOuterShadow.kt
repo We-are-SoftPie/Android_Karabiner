@@ -12,7 +12,7 @@ fun Modifier.karaOuterShadow(
     color: Color,
     alpha: Float = 0.15f,
     cornerRadius: Dp = 0.dp,
-    shadowRadius: Dp = 0.dp,
+    shadowRadius: Dp = 10.dp,
     offsetY: Dp = 0.dp,
     offsetX: Dp = 0.dp
 ) = this.drawBehind {
