@@ -22,6 +22,8 @@ object KarabinerColor {
     val Gray800 = Color(0xFF2F2F32)
     val Gray900 = Color(0xFF171718)
 
+    val TextFieldStroke = Color(0xFFC6CFD7)
+
     val Transparent = Color(0x00000000)
 }
 
