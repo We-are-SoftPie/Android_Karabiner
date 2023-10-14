@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import com.softpie.karabiner.R
 import com.softpie.karabiner.component.theme.Body
 import com.softpie.karabiner.component.theme.KarabinerTheme
@@ -62,18 +63,21 @@ fun SplashScreen(navController: NavController) {
         visible = true
         delay(1000L)
         visible = false
-        delay(450L)
+        delay(400L)
         val karabinerSharedPreferences = KarabinerSharedPreferences(context)
 //        karabinerSharedPreferences.myName = "333"
 //        Log.d(TAG, "SplashScreen: ${karabinerSharedPreferences.myName}")
-        if (karabinerSharedPreferences.myName == "") {
-            return@LaunchedEffect navController.navigate(NavGroup.Auth.NAME.id)
-        }
-        if (karabinerSharedPreferences.myTel == "") {
-            return@LaunchedEffect navController.navigate(NavGroup.Auth.TEL.id)
-        }
-        if (karabinerSharedPreferences.myEmail == "") {
-            return@LaunchedEffect navController.navigate(NavGroup.Auth.EMAIL.id)
+        var target: String? =
+            if (karabinerSharedPreferences.myName == "" ) NavGroup.Auth.NAME.id
+            else if(karabinerSharedPreferences.myTel == "") NavGroup.Auth.TEL.id
+            else if(karabinerSharedPreferences.myEmail == "") NavGroup.Auth.EMAIL.id
+            else null
+        if (target != null) {
+            navController.navigate(target) {
+                popUpTo(NavGroup.Auth.LAUNCH.id) { inclusive = true}
+                launchSingleTop = true
+            }
+            return@LaunchedEffect
         }
     }
     Box(
