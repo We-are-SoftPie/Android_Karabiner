@@ -3,6 +3,7 @@ package com.softpie.karabiner.component.button
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -10,6 +11,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shape
@@ -77,14 +79,16 @@ fun KarabinerBottomButton(
                 .padding(contentPadding)
                 .then(modifier),
         ) {
-            Headline(
-                modifier = Modifier,
-                text = text,
-                textColor = if (karabinerable) KarabinerColor.White else contentColorFor(
-                    if (enabled) type.buttonColor
-                    else type.disableColor
+            Column {
+                Headline(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = text,
+                    textColor = if (karabinerable) KarabinerColor.White else contentColorFor(
+                        if (enabled) type.buttonColor
+                        else type.disableColor
+                    )
                 )
-            )
+            }
         }
     }
 }

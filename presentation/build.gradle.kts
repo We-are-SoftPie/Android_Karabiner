@@ -58,6 +58,9 @@ android {
 }
 
 dependencies {
+    // splashScreen
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
     // keyboard
     implementation("tech.thdev:extensions-compose-keyboard-state:1.3.2")
 

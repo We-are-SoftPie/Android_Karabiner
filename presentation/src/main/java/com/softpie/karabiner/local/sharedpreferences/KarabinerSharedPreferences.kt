@@ -7,7 +7,7 @@ import com.softpie.karabiner.local.keystore.AndroidKeyStoreUtil.init
 
 class KarabinerSharedPreferences(context: Context) {
 
-    private lateinit var myKeystore: AndroidKeyStoreUtil
+    private var myKeystore: AndroidKeyStoreUtil
 
     companion object {
         private var keystore: AndroidKeyStoreUtil? = null
