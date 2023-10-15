@@ -36,7 +36,7 @@ fun KarabinerButton(
     shape: Shape = KarabinerTheme.shape.semiLarge,
     border: BorderStroke? = null,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    contentPadding: PaddingValues = PaddingValues(vertical = 12.dp, horizontal = 24.dp),
+    contentPadding: PaddingValues = PaddingValues(vertical = 13.dp, horizontal = 24.dp),
     onClick: () -> Unit,
 ) {
     val colors = if (karabinerable)
@@ -77,8 +77,7 @@ fun KarabinerButton(
                         )
                     )
                 )
-                .padding(contentPadding)
-                .then(modifier),
+                .padding(contentPadding),
         ) {
             Column {
                 Headline(
