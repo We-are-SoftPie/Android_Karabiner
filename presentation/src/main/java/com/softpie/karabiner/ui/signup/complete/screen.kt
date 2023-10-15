@@ -66,7 +66,7 @@ fun SignupCompleteScreen(
                     bottom = 16.dp
                 ),
             text = "완료하기",
-            shape = KarabinerTheme.shape.large
+            shape = KarabinerTheme.shape.semiLarge
         ) {
 
         }

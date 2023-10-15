@@ -94,7 +94,7 @@ fun SignupNameScreen(
                     bottom = if (keyboardShow) 0.dp else 16.dp,
                 ),
             text = "다음으로",
-            shape = if (keyboardShow) RoundedCornerShape(0.dp) else KarabinerTheme.shape.large
+            shape = if (keyboardShow) RoundedCornerShape(0.dp) else KarabinerTheme.shape.semiLarge
         ) {
             if (value.isNotEmpty() && value.length > 1) {
                 KarabinerSharedPreferences(context).myName = value
