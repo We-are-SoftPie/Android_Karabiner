@@ -85,6 +85,7 @@ fun SplashScreen(navController: NavController) {
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        
         AnimatedVisibility(
             visible = visible,
             enter = fadeIn(animationSpec = tween(1000) ),
