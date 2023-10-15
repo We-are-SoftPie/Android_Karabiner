@@ -12,6 +12,7 @@ import java.security.KeyStore
 import java.security.spec.RSAKeyGenParameterSpec
 import java.security.spec.RSAKeyGenParameterSpec.F4
 import javax.crypto.Cipher
+import javax.crypto.IllegalBlockSizeException
 
 object AndroidKeyStoreUtil {
 
@@ -131,8 +132,11 @@ object AndroidKeyStoreUtil {
         }
         val base64EncryptedBytes = base64EncryptedCipherText.toByteArray(Charsets.UTF_8)
         val encryptedBytes = Base64.decode(base64EncryptedBytes, Base64.DEFAULT)
-        val decryptedBytes = cipher.doFinal(encryptedBytes)
-
-        return String(decryptedBytes)
+        return try {
+            var decryptedBytes =  cipher.doFinal(encryptedBytes)
+            String(decryptedBytes)
+        } catch (e: IllegalBlockSizeException) {
+            ""
+        }
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.Composable
@@ -35,7 +36,8 @@ fun KarabinerTextField(
     modifier: Modifier = Modifier,
     value: String,
     hint: String = "",
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
     var isFocus by remember { mutableStateOf(false) }
@@ -50,18 +52,17 @@ fun KarabinerTextField(
             value = value,
             textStyle = KarabinerTheme.typography.body,
             onValueChange = onValueChange,
+            keyboardOptions = keyboardOptions,
             cursorBrush = SolidColor(Black)
         ) { innerTextField ->
-            if (isFocus || value.isNotEmpty()) {
-                Box(modifier = Modifier.padding(20.dp)) {
-                    innerTextField()
+            Box(modifier = Modifier.padding(20.dp)) {
+                innerTextField()
+                if (!isFocus && value.isEmpty()) {
+                    Body(
+                        text = hint,
+                        textColor = Color(0xFF9099A6)
+                    )
                 }
-            } else {
-                Body(
-                    modifier = Modifier.padding(20.dp),
-                    text = hint,
-                    textColor = Color(0xFF9099A6)
-                )
             }
         }
     }
