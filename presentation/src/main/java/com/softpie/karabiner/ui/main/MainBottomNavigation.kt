@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.softpie.karabiner.component.appbar.KarabinerBottomNavigation
-import com.softpie.karabiner.component.button.KarabinerBottomButton
+import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.ui.root.NavGroup
 
 @Composable
@@ -40,7 +40,7 @@ fun MainBottomNavigation(
             ) {
                 if (it) 1f else 0f
             }
-            KarabinerBottomButton(
+            KarabinerButton(
                 text = "se",
                 onClick = {
                     selectedTabCallback(item)

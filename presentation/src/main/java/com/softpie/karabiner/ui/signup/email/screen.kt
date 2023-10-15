@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
-import com.softpie.karabiner.component.button.KarabinerBottomButton
+import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.textfield.KarabinerTextField
 import com.softpie.karabiner.component.theme.Headline
 import com.softpie.karabiner.component.theme.KarabinerTheme
@@ -87,7 +87,7 @@ fun SignupEmailScreen(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        KarabinerBottomButton(
+        KarabinerButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = if (keyboardState) 0.dp else 24.dp),

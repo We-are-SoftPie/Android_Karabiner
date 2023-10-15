@@ -38,7 +38,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
-import com.softpie.karabiner.component.button.KarabinerBottomButton
+import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.textfield.KarabinerTextField
 import com.softpie.karabiner.component.theme.Headline
 import com.softpie.karabiner.component.theme.KarabinerTheme
@@ -119,7 +119,7 @@ fun SignupTelScreen(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        KarabinerBottomButton(
+        KarabinerButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = if (keyboardState) 0.dp else 24.dp),
