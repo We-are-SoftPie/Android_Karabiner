@@ -60,7 +60,11 @@ fun SignupCompleteScreen(
         KarabinerButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+                .padding(
+                    start = 24.dp,
+                    end = 24.dp,
+                    bottom = 16.dp
+                ),
             text = "완료하기",
             shape = KarabinerTheme.shape.large
         ) {

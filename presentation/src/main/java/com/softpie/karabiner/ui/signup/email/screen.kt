@@ -37,6 +37,7 @@ import com.softpie.karabiner.component.theme.Title
 import com.softpie.karabiner.local.sharedpreferences.KarabinerSharedPreferences
 import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.isValidEmail
+import com.softpie.karabiner.utiles.rememberKeyboardIsOpen
 import com.softpie.karabiner.utiles.shortToast
 
 
@@ -51,7 +52,7 @@ fun SignupEmailScreen(
     WindowCompat.setDecorFitsSystemWindows(activity.window, false)
     var value by remember { mutableStateOf("")}
     val focus = LocalFocusManager.current
-    val keyboardState = WindowInsets.isImeVisible
+    val keyboardShow by rememberKeyboardIsOpen()
     Column(modifier = Modifier
         .fillMaxSize()
         .imePadding()
@@ -90,9 +91,13 @@ fun SignupEmailScreen(
         KarabinerButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = if (keyboardState) 0.dp else 24.dp),
+                .padding(
+                    start = if (keyboardShow) 0.dp else 24.dp,
+                    end = if (keyboardShow) 0.dp else 24.dp,
+                    bottom = if (keyboardShow) 0.dp else 16.dp,
+                ),
             text = "다음으로",
-            shape = if (keyboardState) RoundedCornerShape(0.dp) else KarabinerTheme.shape.large
+            shape = if (keyboardShow) RoundedCornerShape(0.dp) else KarabinerTheme.shape.large
         ) {
             if (value.isNotEmpty() && value.isValidEmail()) {
                 KarabinerSharedPreferences(context).myEmail = value
