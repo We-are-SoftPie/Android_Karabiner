@@ -4,5 +4,5 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val gradient = Brush.linearGradient(
-    colors = listOf(Color(0xFF0E3BDB), Color(0xFFFC0D0D))
+    colors = listOf(Color(0xFFFC0D0D), Color(0xFF0E3BDB))
 )
