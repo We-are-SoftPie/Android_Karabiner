@@ -10,7 +10,10 @@ import androidx.room.Update
 @Dao
 interface DeclarationDao {
     @Query("SELECT * FROM declaration_table")
-    fun getMembers(): DeclarationEntity
+    fun getMembers(): List<DeclarationEntity>
+
+    @Query("SELECT * FROM declaration_table WHERE id = :declarationId")
+    fun getMember(declarationId: Int): DeclarationEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMember(entity: DeclarationEntity)

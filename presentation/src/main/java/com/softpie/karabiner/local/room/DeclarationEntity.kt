@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "declaration_table")
 data class DeclarationEntity (
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
     @ColumnInfo(name = "image")

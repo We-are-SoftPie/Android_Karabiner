@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -71,7 +72,7 @@ fun SplashScreen(navController: NavController) {
             if (karabinerSharedPreferences.myName == "" ) NavGroup.Auth.NAME.id
             else if(karabinerSharedPreferences.myTel == "") NavGroup.Auth.TEL.id
             else if(karabinerSharedPreferences.myEmail == "") NavGroup.Auth.EMAIL.id
-            else null
+            else NavGroup.Main.LIST.id
         if (target != null) {
             navController.navigate(target) {
                 popUpTo(NavGroup.Auth.LAUNCH.id) { inclusive = true}
@@ -113,14 +114,21 @@ fun SplashScreen(navController: NavController) {
                         style = textStyle
                     )
                 }
-                Text(
-                    text = "Karabiner",
-                    style = KarabinerTheme.typography.title.copy(
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 36.sp,
-                        lineHeight = 40.sp
-                    )
+                Image(
+                    modifier = Modifier
+                        .width(180.dp)
+                        .height(48.dp),
+                    painter = painterResource(id = R.drawable.ic_logo_text),
+                    contentDescription = "로고 텍스트"
                 )
+//                Text(
+//                    text = "Karabiner",
+//                    style = KarabinerTheme.typography.title.copy(
+//                        fontWeight = FontWeight.Medium,
+//                        fontSize = 36.sp,
+//                        lineHeight = 40.sp
+//                    )
+//                )
             }
 
         }

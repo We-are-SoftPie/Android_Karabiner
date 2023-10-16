@@ -18,6 +18,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavOptionsBuilder
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
@@ -25,6 +26,7 @@ import com.softpie.karabiner.R
 import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.theme.Headline
 import com.softpie.karabiner.component.theme.KarabinerTheme
+import com.softpie.karabiner.ui.root.NavGroup
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -68,7 +70,16 @@ fun SignupCompleteScreen(
             text = "완료하기",
             shape = KarabinerTheme.shape.semiLarge
         ) {
+            while (navController.popBackStack()) {
 
+            }
+            navController.navigate(NavGroup.Main.LIST.id) {
+                popUpTo(NavGroup.Auth.COMPLETE.id) {
+                    inclusive = true
+                }
+
+                launchSingleTop = true
+            }
         }
     }
 }

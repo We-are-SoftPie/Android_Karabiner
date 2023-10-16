@@ -304,6 +304,144 @@ fun Caption(
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun BoldBody(
+    modifier: Modifier = Modifier,
+    text: String,
+    karabinerable: Boolean = false,
+    textColor: Color = LocalContentColor.current,
+    textAlign: TextAlign = TextAlign.Start,
+    textDecoration: TextDecoration? = null,
+    textOverflow: TextOverflow = TextOverflow.Clip,
+    interactionSource: MutableInteractionSource = MutableInteractionSource(),
+    rippleColor: Color = Color.Unspecified,
+    rippleEnable: Boolean = false,
+    bounded: Boolean = true,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onClick: (() -> Unit)? = null,
+) {
+    val style = if (karabinerable) KarabinerTypography.body.copy(
+        brush = gradient,
+        fontWeight = FontWeight.Bold
+    )
+    else KarabinerTypography.body.copy(
+        fontWeight = FontWeight.Bold
+    )
+    Text(
+        modifier = modifier.karaClickable(
+            onClick = onClick,
+            interactionSource = interactionSource,
+            rippleColor = rippleColor,
+            rippleEnable = rippleEnable,
+            bounded = bounded
+        ),
+        text = text,
+        style = style,
+        color = textColor,
+        textAlign = textAlign,
+        textDecoration = textDecoration,
+        overflow = textOverflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        onTextLayout = onTextLayout,
+    )
+}
+
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun BoldHeadline(
+    modifier: Modifier = Modifier,
+    text: String,
+    karabinerable: Boolean = false,
+    textColor: Color = LocalContentColor.current,
+    textAlign: TextAlign = TextAlign.Start,
+    textDecoration: TextDecoration? = null,
+    textOverflow: TextOverflow = TextOverflow.Clip,
+    interactionSource: MutableInteractionSource = MutableInteractionSource(),
+    rippleColor: Color = Color.Unspecified,
+    rippleEnable: Boolean = false,
+    bounded: Boolean = true,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onClick: (() -> Unit)? = null,
+) {
+    val style = if (karabinerable) KarabinerTypography.headline.copy(
+        brush = gradient,
+        fontWeight = FontWeight.Bold
+    )
+    else KarabinerTypography.headline.copy(
+        fontWeight = FontWeight.Bold
+    )
+    Text(
+        modifier = modifier.karaClickable(
+            onClick = onClick,
+            interactionSource = interactionSource,
+            rippleColor = rippleColor,
+            rippleEnable = rippleEnable,
+            bounded = bounded
+        ),
+        text = text,
+        style = style,
+        color = textColor,
+        textAlign = textAlign,
+        textDecoration = textDecoration,
+        overflow = textOverflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        onTextLayout = onTextLayout,
+    )
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun BoldTitle(
+    modifier: Modifier = Modifier,
+    text: String,
+    karabinerable: Boolean = false,
+    textColor: Color = LocalContentColor.current,
+    textAlign: TextAlign = TextAlign.Start,
+    textDecoration: TextDecoration? = null,
+    textOverflow: TextOverflow = TextOverflow.Clip,
+    interactionSource: MutableInteractionSource = MutableInteractionSource(),
+    rippleColor: Color = Color.Unspecified,
+    rippleEnable: Boolean = false,
+    bounded: Boolean = true,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onClick: (() -> Unit)? = null,
+) {
+    val style = if (karabinerable) KarabinerTypography.title.copy(
+        brush = gradient,
+        fontWeight = FontWeight.Bold
+    )
+    else KarabinerTypography.title.copy(
+        fontWeight = FontWeight.Bold
+    )
+    Text(
+        modifier = modifier.karaClickable(
+            onClick = onClick,
+            interactionSource = interactionSource,
+            rippleColor = rippleColor,
+            rippleEnable = rippleEnable,
+            bounded = bounded
+        ),
+        text = text,
+        style = style,
+        color = textColor,
+        textAlign = textAlign,
+        textDecoration = textDecoration,
+        overflow = textOverflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        onTextLayout = onTextLayout,
+    )
+}
 
 
 val LocalTypography = staticCompositionLocalOf { KarabinerTypography }
