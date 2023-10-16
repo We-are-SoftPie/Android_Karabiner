@@ -2,8 +2,13 @@ package com.softpie.karabiner.ui.root
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
+import com.softpie.karabiner.ui.log.LogScreen
+import com.softpie.karabiner.ui.log.info.LogInfoScreen
 import com.softpie.karabiner.ui.main.MainScreen
 import com.softpie.karabiner.ui.signup.complete.SignupCompleteScreen
 import com.softpie.karabiner.ui.signup.email.SignupEmailScreen
@@ -37,6 +42,31 @@ fun NavigationGraph(
         }
         composable(NavGroup.Auth.LAUNCH.id) {
             SplashScreen(navController = navController)
+        }
+        navigation(
+            startDestination = NavGroup.Main.LIST.id,
+            route = NavGroup.Main.LIST.group
+        ){
+            composable(NavGroup.Main.LIST.id) {
+                LogScreen(navController = navController)
+            }
+            composable(
+                NavGroup.Main.LIST_IFNO.id,
+                arguments = listOf(
+                    navArgument("id") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {entry ->
+                val ids = entry.arguments?.getString("id")
+                ids?.let {
+                    LogInfoScreen(
+                        navController = navController,
+                        id = it.toInt()
+                    )
+                }
+            }
+
         }
     }
 }
