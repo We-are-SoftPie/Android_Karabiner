@@ -26,6 +26,7 @@ fun MainScreen(
     val state by vm.state.collectAsState()
     Log.d(TAG, "MainScreen: ${state.selectedTab.id}")
 
+
     Scaffold(
         bottomBar = {
             MainBottomNavigation(selectedTab = state.selectedTab, selectedTabCallback = {
