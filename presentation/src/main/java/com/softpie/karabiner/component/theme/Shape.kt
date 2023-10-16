@@ -1,5 +1,6 @@
 package com.softpie.karabiner.component.theme
 
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -11,7 +12,6 @@ object KarabinerRadius {
     val middle = 12.dp
     val semiLarge = 16.dp
     val large = 20.dp
-    val circle = 50.0f
 }
 
 class KarabinerShape(
@@ -25,8 +25,7 @@ class KarabinerShape(
         RoundedCornerShape(KarabinerRadius.semiLarge),
     val large: CornerBasedShape =
         RoundedCornerShape(KarabinerRadius.large),
-    val circle: CornerBasedShape =
-        RoundedCornerShape(KarabinerRadius.circle)
+    val circle: CornerBasedShape = CircleShape
 )
 
 internal val LocalShape = staticCompositionLocalOf { KarabinerShape() }

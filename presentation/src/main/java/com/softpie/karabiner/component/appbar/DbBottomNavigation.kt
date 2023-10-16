@@ -9,29 +9,30 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+
+val bottomNavHeight = 60.dp
 
 @Composable
 fun KarabinerBottomNavigation(
     modifier: Modifier = Modifier,
     backgroundColor: Color = Color.Transparent,
-    contentColor: Color = contentColorFor(backgroundColor),
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
         color = backgroundColor,
-        contentColor = contentColor,
         modifier = modifier
     ) {
         Row(
             Modifier
                 .fillMaxWidth()
-                .height(56.dp)
+                .height(bottomNavHeight)
                 .selectableGroup(),
             horizontalArrangement = Arrangement.SpaceAround,
-            content = content
+            content = content,
         )
     }
 }
