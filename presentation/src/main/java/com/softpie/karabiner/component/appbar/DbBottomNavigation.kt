@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-val bottomNavHeight = 56.dp
+val bottomNavHeight = 60.dp
 
 @Composable
 fun KarabinerBottomNavigation(

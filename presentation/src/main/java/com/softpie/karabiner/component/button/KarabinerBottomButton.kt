@@ -1,5 +1,6 @@
 package com.softpie.karabiner.component.button
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,26 +39,20 @@ import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.contentColorFor
 import com.softpie.karabiner.component.theme.gradient
 
-sealed class ButtonType(val buttonColor: Color, val disableColor: Color = KarabinerColor.Gray200) {
-    object Black: ButtonType(buttonColor = KarabinerColor.Black)
-    object Gray: ButtonType(buttonColor = KarabinerColor.Gray100)
-    object White: ButtonType(buttonColor = KarabinerColor.White)
-    object Transparent: ButtonType(buttonColor = KarabinerColor.Transparent)
-}
 
 @Composable
 fun KarabinerBottomButton(
     modifier: Modifier = Modifier,
     text: String,
+    iconId: Int,
     karabinerable: Boolean = false,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    contentPadding: PaddingValues = PaddingValues(0.dp),
+    enable: Boolean = true,
     onClick: () -> Unit,
 ) {
     Surface(
         color = KarabinerColor.Transparent,
-        modifier = Modifier
-            .height(bottomNavHeight)
+        modifier = modifier
             .background(
                 Brush.linearGradient(
                     listOf(
@@ -66,18 +61,15 @@ fun KarabinerBottomButton(
                     )
                 )
             )
-            .padding(contentPadding)
-            .then(modifier)
             .karaClickable(
                 interactionSource = interactionSource,
-                rippleEnable = true,
-                bounded = false
-            ) {
-              onClick()
-            },
+                rippleEnable = enable,
+                bounded = false,
+                onClick = onClick)
     ) {
         Column(
             modifier = if (karabinerable) Modifier
+                .height(bottomNavHeight)
                 .graphicsLayer(alpha = 0.99f)
                 .drawWithCache {
                     onDrawWithContent {
@@ -89,7 +81,7 @@ fun KarabinerBottomButton(
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_list),
+                painter = painterResource(id = iconId),
                 contentDescription = null,
                 tint = KarabinerColor.Gray200
             )
