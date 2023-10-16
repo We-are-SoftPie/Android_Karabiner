@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,8 @@ import com.softpie.karabiner.component.theme.KarabinerColor
 import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 
+private val navHorizontalMargin = 16.dp
+
 @Composable
 fun MainBottomNavigation(
     selectedTab: NavGroup.Main,
@@ -38,6 +41,13 @@ fun MainBottomNavigation(
         NavGroup.Main.CAM,
         NavGroup.Main.SET,
     )
+
+    val itemNm = listOf(
+        "목록",
+        "에에에에에에엥",
+        "설정"
+    )
+
     val scale by animateFloatAsState(targetValue = if (selectedTab == NavGroup.Main.CAM) 1.1f else 1f, label = "")
 
     Box {
@@ -50,7 +60,9 @@ fun MainBottomNavigation(
                     shadowRadius = 4.dp
                 )
         ) {
-            items.forEach { item ->
+            Spacer(modifier = Modifier.width(navHorizontalMargin))
+
+            items.forEachIndexed { index, item ->
                 val selected = item == selectedTab
                 if (item == NavGroup.Main.CAM)
                     KarabinerBottomButton(
@@ -68,7 +80,7 @@ fun MainBottomNavigation(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight(),
-                        text = "se",
+                        text = itemNm[index],
                         onClick = {
                             selectedTabCallback(item)
                         },
@@ -76,6 +88,8 @@ fun MainBottomNavigation(
                         iconId = item.icon
                     )
             }
+            Spacer(modifier = Modifier.width(navHorizontalMargin))
+
         }
         Row {
             Spacer(modifier = Modifier.weight(1f))

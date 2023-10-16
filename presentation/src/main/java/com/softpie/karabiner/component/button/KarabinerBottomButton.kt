@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -65,7 +66,8 @@ fun KarabinerBottomButton(
                 interactionSource = interactionSource,
                 rippleEnable = enable,
                 bounded = false,
-                onClick = onClick)
+                onClick = onClick
+            )
     ) {
         Column(
             modifier = if (karabinerable) Modifier
@@ -85,6 +87,7 @@ fun KarabinerBottomButton(
                 contentDescription = null,
                 tint = KarabinerColor.Gray200
             )
+            Spacer(modifier = Modifier.height(6.dp))
             Label(
                 modifier = Modifier,
                 text = text,
