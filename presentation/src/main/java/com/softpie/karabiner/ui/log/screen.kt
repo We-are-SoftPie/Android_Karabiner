@@ -130,6 +130,11 @@ fun LogScreen(
                     KarabinerButton(text = "새로고침") {
                         logViewModel.load()
                     }
+                    KarabinerButton(text = "이동") {
+                        navController.navigate(
+                            NavGroup.Main.CAM.id
+                        )
+                    }
                 }
             }
             itemsIndexed(

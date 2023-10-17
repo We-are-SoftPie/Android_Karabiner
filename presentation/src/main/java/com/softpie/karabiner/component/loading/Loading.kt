@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.softpie.karabiner.R
 
@@ -25,6 +26,8 @@ fun LoadInFullScreen() {
             modifier = Modifier
                 .padding(horizontal = 24.dp)
                 .fillMaxSize(),
-            composition = lottieAnime)
+            composition = lottieAnime,
+            iterations = LottieConstants.IterateForever
+        )
     }
 }

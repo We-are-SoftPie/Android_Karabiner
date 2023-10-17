@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.softpie.karabiner.ui.cam.CamScreen
 import com.softpie.karabiner.ui.log.LogScreen
 import com.softpie.karabiner.ui.log.info.LogInfoScreen
 import com.softpie.karabiner.ui.main.MainScreen
@@ -42,6 +43,9 @@ fun NavigationGraph(
         }
         composable(NavGroup.Auth.LAUNCH.id) {
             SplashScreen(navController = navController)
+        }
+        composable(NavGroup.Main.CAM.id) {
+            CamScreen(navController = navController)
         }
         navigation(
             startDestination = NavGroup.Main.LIST.id,

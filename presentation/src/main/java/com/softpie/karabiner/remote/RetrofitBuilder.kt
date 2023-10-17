@@ -5,12 +5,15 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.softpie.karabiner.BuildConfig
+import com.softpie.karabiner.remote.service.KarabinerService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -18,9 +21,9 @@ import javax.net.ssl.X509TrustManager
 class RetrofitBuilder {
     companion object {
         private var instance: Retrofit? = null
-
+        private var karabinerService: KarabinerService? = null
         @Synchronized
-        fun getInstance(context: Context): Retrofit? {
+        fun getInstance(): Retrofit {
             if (instance == null) {
                 val interceptor = HttpLoggingInterceptor()
                 interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -39,6 +42,9 @@ class RetrofitBuilder {
 
                 okhttpBuilder.sslSocketFactory(sslSocketFactory, trustAllCerts[0] as X509TrustManager)
                 okhttpBuilder.hostnameVerifier { hostname, session -> true }
+                okhttpBuilder.connectTimeout(30, TimeUnit.SECONDS)
+                okhttpBuilder.readTimeout(30, TimeUnit.SECONDS)
+                okhttpBuilder.writeTimeout(30, TimeUnit.SECONDS)
                 val okHttpClient =  okhttpBuilder.build()
 
                 val gson = GsonBuilder().create()
@@ -48,7 +54,15 @@ class RetrofitBuilder {
                     .client(okHttpClient)
                     .build()
             }
-            return instance
+            return instance!!
+        }
+
+        @Synchronized
+        fun getKarabinerService(): KarabinerService {
+            if (karabinerService == null) {
+                karabinerService = getInstance().create(KarabinerService::class.java)
+            }
+            return karabinerService!!
         }
     }
 }
