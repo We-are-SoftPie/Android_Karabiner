@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
 }
 
+
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 
@@ -24,6 +25,13 @@ android {
         buildConfigField("String", "SERVER", "${properties["SERVER"]}")
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        configurations.all {
+            resolutionStrategy {
+                force("androidx.emoji2:emoji2-views-helper:1.3.0")
+                force("androidx.emoji2:emoji2:1.3.0")
+            }
         }
     }
 
@@ -106,5 +114,15 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    val camerax_version = "1.2.1"
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    implementation("androidx.camera:camera-video:${camerax_version}")
+
+    implementation("androidx.camera:camera-view:${camerax_version}")
+    implementation("androidx.camera:camera-extensions:${camerax_version}")
+
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
 }
