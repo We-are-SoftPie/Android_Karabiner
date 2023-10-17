@@ -13,7 +13,7 @@ sealed class NavGroup(val group: String) {
 
     sealed class Main(val id: String, val icon: Int) : NavGroup("main") {
         object MAIN: Main("main", -1)
-        object LIST: Main("home", R.drawable.ic_list)
+        object LIST: Main("list", R.drawable.ic_list)
         object CAM: Main("cam", R.drawable.ic_cam)
         object SET: Main("my", R.drawable.ic_set)
         object LIST_IFNO: Main("homeInfo/{id}", R.drawable.ic_list)
