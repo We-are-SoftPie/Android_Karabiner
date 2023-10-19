@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -107,7 +108,7 @@ fun ButtonPreview() {
 
     Column {
 
-        KarabinerButton(text = "신고하기") {
+        KarabinerButton(text = "신고하기", modifier = Modifier.height(52.dp)) {
 
         }
         KarabinerButton(text = "신고하기", karabinerable = true) {

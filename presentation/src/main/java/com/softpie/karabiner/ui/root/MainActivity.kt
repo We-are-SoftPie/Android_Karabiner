@@ -2,6 +2,7 @@ package com.softpie.karabiner.ui.root
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -23,7 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.softpie.karabiner.component.theme.KarabinerTheme
-import com.softpie.karabiner.ui.main.MainBottomNavigation
+import com.softpie.karabiner.utiles.TAG
+import com.softpie.karabiner.utiles.collectAsSideEffect
 import tech.thdev.compose.extensions.keyboard.state.MutableExKeyboardStateSource
 import tech.thdev.compose.extensions.keyboard.state.foundation.removeFocusWhenKeyboardIsHidden
 import tech.thdev.compose.extensions.keyboard.state.localowners.LocalMutableExKeyboardStateSourceOwner
@@ -38,7 +40,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val state by vm.state.collectAsState()
+            var capture by remember { mutableStateOf(false) }
             var showBottomBar by remember { mutableStateOf(false) }
+            vm.sideEffect.collectAsSideEffect {
+                Log.d("TAG", "onCreate: qweeqw")
+            }
             KarabinerTheme {
                 Box(
                     modifier = Modifier
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
                                     MainBottomNavigation(
                                         selectedTab = state.selectedTab,
                                         selectedTabCallback = {
-                                            vm.updateSelectedTab(it)
+//                                            vm.updateSelectedTab(it)
                                             val nav = when (
                                                 it
                                             ) {
@@ -82,15 +88,28 @@ class MainActivity : ComponentActivity() {
                                             navController.navigate(nav) {
                                                 launchSingleTop = true
                                             }
+                                        },
+                                        camCallback = {
+                                            Log.d(TAG, "onCreate: vm onClick")
+                                            vm.clickSideEffect()
+                                            capture = !capture
                                         }
-                                    ) {
-                                        
-                                    }
+                                    )
                                 }
                             }
                         ) {
                             Box(modifier = Modifier.padding(it)) {
-                                NavigationGraph(navController = navController) {
+                                NavigationGraph(
+                                    navController = navController,
+                                    capture = capture,
+                                    changePage = {
+                                        Log.d(TAG, "onCreate: 페이지 변경")
+                                        capture = false
+                                    },
+                                    onChangeNav = {
+                                        vm.updateSelectedTab(it)
+                                    }
+                                ) {
                                     showBottomBar = it
                                 }
                             }

@@ -14,10 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.softpie.karabiner.ui.cam.CamScreen
-import com.softpie.karabiner.ui.main.MainBottomNavigation
+import com.softpie.karabiner.ui.root.MainBottomNavigation
 import com.softpie.karabiner.ui.root.MainViewModel
-import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 
 @Composable
@@ -51,12 +49,12 @@ fun EeScreen(
         ) {
             Column {
                 when (state.selectedTab) {
-                    NavGroup.Main.CAM -> CamScreen(
-                        navController = navController,
-                        bottomNavVisible = {
-                            bottomVisible = it
-                        },
-                    )
+//                    NavGroup.Main.CAM -> CamScreen(
+//                        navController = navController,
+//                        bottomNavVisible = {
+//                            bottomVisible = it
+//                        },
+//                    )
 
                     else -> {
                         bottomVisible = true

@@ -12,9 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.softpie.karabiner.ui.cam.CamScreen
+import com.softpie.karabiner.ui.root.MainBottomNavigation
 import com.softpie.karabiner.ui.root.MainViewModel
-import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,7 +43,7 @@ fun MainScreen(
         ) {
             Column {
                 when (state.selectedTab) {
-                    NavGroup.Main.CAM -> CamScreen(navController = navController)
+//                    NavGroup.Main.CAM -> CamScreen(navController = navController)
 
                     else -> {
 

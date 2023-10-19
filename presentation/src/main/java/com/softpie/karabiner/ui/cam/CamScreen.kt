@@ -54,6 +54,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -92,12 +93,14 @@ import com.softpie.karabiner.component.theme.Headline
 import com.softpie.karabiner.component.theme.KarabinerTheme
 import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.Title
+import com.softpie.karabiner.ui.root.MainSideEffect
 import com.softpie.karabiner.utiles.TAG
 import com.softpie.karabiner.utiles.collectAsSideEffect
 import com.softpie.karabiner.utiles.getCategoryName
 import com.softpie.karabiner.utiles.getCategoryNumber
 import com.softpie.karabiner.utiles.shortToast
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import java.io.ByteArrayOutputStream
 import java.security.AccessController.getContext
 import java.util.Locale
@@ -108,18 +111,19 @@ import java.util.Locale
 fun CamScreen(
     navController: NavController,
     camViewModel: CamViewModel = viewModel(),
+    capture: Boolean,
     bottomNavVisible: (Boolean) -> Unit = {}
 ) {
-    
-
     // 관리
     val camState = camViewModel.uiState.collectAsState().value
 
     // 카메라
     val context = LocalContext.current
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
-
-
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val cameraController = remember { LifecycleCameraController(context)}
+    val isCapture by rememberUpdatedState(newValue = capture)
+    Log.d(TAG, "CamScreen: $isCapture")
 //    LaunchedEffect(true) {
 //        launcher.launch(Manifest.permission.READ_PHONE_NUMBERS)
 //    }
@@ -206,6 +210,37 @@ fun CamScreen(
             }
         }
     }
+    LaunchedEffect(key1 = capture == true) {
+        try {
+            if (capture && cameraController.isImageCaptureEnabled) {
+                Log.d(TAG, "CamScreen: qwewqeqwewqe 호출됨")
+                val mainExecutor = ContextCompat.getMainExecutor(context)
+                cameraController.takePicture(
+                    mainExecutor,
+                    @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
+                        override fun onCaptureSuccess(image: ImageProxy) {
+                            Log.d("LOG", "onCaptureSuccess: ${image.height} ${image.width}")
+                            super.onCaptureSuccess(image)
+                            Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.rotationDegrees}")
+                            val bitmap = imageProxyToBitmap(image)!!
+                            val rotateMatrix = Matrix()
+                            rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
+                            camImage = Bitmap.createBitmap(
+                                bitmap, 0, 0,
+                                bitmap.width, bitmap.height, rotateMatrix, false
+                            )
+                            //                                camViewModel.postImage(camImage)
+                            //                                camViewModel.nextPage()
+                            camViewModel.nextNowPage()
+                            Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
+                            Log.d(TAG, "onCaptureSuccess: $textPage")
+                        }
+                    })
+            }
+        } catch (e: java.lang.Exception) {
+            Log.d(TAG, "CamScreen: 알파노")
+        }
+    }
 
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
@@ -286,8 +321,7 @@ fun CamScreen(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        val lifecycleOwner = LocalLifecycleOwner.current
-        val cameraController = remember { LifecycleCameraController(context)}
+
         Scaffold(
             floatingActionButton = {
                 ExtendedFloatingActionButton(
@@ -307,7 +341,7 @@ fun CamScreen(
                                 val rotateMatrix = Matrix()
                                 rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
                                 camImage = Bitmap.createBitmap(bitmap, 0, 0,
-                                bitmap.width, bitmap.height, rotateMatrix, false)
+                                    bitmap.width, bitmap.height, rotateMatrix, false)
 //                                camViewModel.postImage(camImage)
 //                                camViewModel.nextPage()
                                 camViewModel.nextNowPage()

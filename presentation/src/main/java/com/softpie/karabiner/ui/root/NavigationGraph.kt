@@ -1,5 +1,7 @@
 package com.softpie.karabiner.ui.root
 
+import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,12 +19,16 @@ import com.softpie.karabiner.ui.signup.email.SignupEmailScreen
 import com.softpie.karabiner.ui.signup.name.SignupNameScreen
 import com.softpie.karabiner.ui.signup.splash.SplashScreen
 import com.softpie.karabiner.ui.signup.tel.SignupTelScreen
+import kotlinx.coroutines.flow.Flow
 
 
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    bottomVisible: (Boolean) -> Unit
+    capture: Boolean,
+    changePage: () -> Unit,
+    onChangeNav: (NavGroup.Main) -> Unit,
+    bottomVisible: (Boolean) -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -51,7 +57,8 @@ fun NavigationGraph(
             SplashScreen(navController = navController)
         }
         composable(NavGroup.Main.CAM.id) {
-            CamScreen(navController = navController, bottomNavVisible = bottomVisible)
+            onChangeNav(NavGroup.Main.CAM)
+            CamScreen(navController = navController, bottomNavVisible = bottomVisible, capture = capture)
         }
         navigation(
             startDestination = NavGroup.Main.LIST.id,
@@ -59,6 +66,9 @@ fun NavigationGraph(
         ){
             composable(NavGroup.Main.LIST.id) {
                 bottomVisible(true)
+                changePage()
+                onChangeNav(NavGroup.Main.LIST)
+                Log.d("TAG", "NavigationGraph: 돌아옴")
                 LogScreen(navController = navController)
             }
             composable(
@@ -72,6 +82,8 @@ fun NavigationGraph(
                 val ids = entry.arguments?.getString("id")
                 ids?.let {
                     bottomVisible(true)
+                    changePage()
+                    onChangeNav(NavGroup.Main.LIST)
                     LogInfoScreen(
                         navController = navController,
                         id = it.toInt()
