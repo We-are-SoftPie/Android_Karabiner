@@ -47,12 +47,10 @@ class MainActivity : ComponentActivity() {
             }
             KarabinerTheme {
                 Box(
-                    modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.systemBars)
+                    modifier = if (showBottomBar) Modifier.windowInsetsPadding(WindowInsets.systemBars) else Modifier
                 ) {
                     Box(
-                        modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.safeDrawing)
+                        modifier = if (showBottomBar) Modifier.windowInsetsPadding(WindowInsets.safeDrawing) else Modifier
                     )
                     CompositionLocalProvider(
                         LocalMutableExKeyboardStateSourceOwner provides MutableExKeyboardStateSource() // 2
@@ -110,7 +108,9 @@ class MainActivity : ComponentActivity() {
                                         vm.updateSelectedTab(it)
                                     }
                                 ) {
-                                    showBottomBar = it
+                                    if (showBottomBar != it) {
+                                        showBottomBar = it
+                                    }
                                 }
                             }
                         }

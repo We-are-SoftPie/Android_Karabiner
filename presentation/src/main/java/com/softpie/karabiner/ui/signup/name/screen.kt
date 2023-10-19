@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -85,6 +87,7 @@ fun SignupNameScreen(
         }
         Spacer(modifier = Modifier.weight(1f))
 
+
         KarabinerButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,7 +95,8 @@ fun SignupNameScreen(
                     start = if (keyboardShow) 0.dp else 24.dp,
                     end = if (keyboardShow) 0.dp else 24.dp,
                     bottom = if (keyboardShow) 0.dp else 16.dp,
-                ),
+                )
+                .offset(y = if (keyboardShow) 50.dp else 0.dp),
             text = "다음으로",
             shape = if (keyboardShow) RoundedCornerShape(0.dp) else KarabinerTheme.shape.semiLarge
         ) {

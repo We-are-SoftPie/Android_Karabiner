@@ -77,7 +77,7 @@ fun KarabinerButton(
     ) {
         Surface(
             color = KarabinerColor.Transparent,
-            modifier = modifier
+            modifier = Modifier
                 .background(
                     if (karabinerable) gradient else Brush.linearGradient(
                         listOf(
