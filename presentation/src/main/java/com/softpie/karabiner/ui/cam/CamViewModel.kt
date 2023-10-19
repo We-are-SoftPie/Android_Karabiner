@@ -5,12 +5,16 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.softpie.karabiner.local.room.DeclarationDao
+import com.softpie.karabiner.local.room.DeclarationEntity
 import com.softpie.karabiner.local.room.KarabinerDatabase
 import com.softpie.karabiner.local.sharedpreferences.KarabinerSharedPreferences
 import com.softpie.karabiner.remote.RetrofitBuilder
 import com.softpie.karabiner.remote.mapper.toModel
+import com.softpie.karabiner.remote.request.KarabinerCarInputRequest
+import com.softpie.karabiner.remote.request.KarabinerInputRequest
 import com.softpie.karabiner.utiles.TAG
 import com.softpie.karabiner.utiles.launchIO
+import com.softpie.karabiner.utiles.toByteArray
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,6 +24,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.BufferedSink
+import java.io.ByteArrayOutputStream
+import java.time.LocalDateTime
 
 
 class CamViewModel: ViewModel() {
@@ -67,11 +73,11 @@ class CamViewModel: ViewModel() {
             kotlin.runCatching {
                 val service = RetrofitBuilder.getKarabinerService()
                 service.postImage(bitmapMultipartBody).data.toModel()
-            }.onSuccess {
+            }.onSuccess { result ->
                 this.nextNowPage()
-                Log.d(TAG, "postImage: $it")
+                Log.d(TAG, "postImage: $result")
                 _uiState.value = _uiState.value.copy(
-                    data = it,
+                    data = result,
                     textPage = _uiState.value.textPage + 1
                 )
 
@@ -81,6 +87,62 @@ class CamViewModel: ViewModel() {
             }
         }
 
+    }
+
+    fun postResult(
+        type: Int,
+        address: String,
+        title: String,
+        content: String,
+        carNo: String,
+        image: Bitmap,
+    ) {
+        val name = karabinerSharedPreferences.myName
+        val email = karabinerSharedPreferences.myEmail
+        val phoneNo = karabinerSharedPreferences.myTel
+        launchIO {
+            kotlin.runCatching {
+                val service = RetrofitBuilder.getKarabinerService()
+                if (type in 0..5) {
+                    service.postInput(KarabinerInputRequest(
+                        type = type.toString(),
+                        address = address,
+                        title = title,
+                        content = content,
+                        phoneNo = phoneNo,
+                        name = name,
+                        email = email
+                    )).reportId
+                } else {
+                    service.postInput(KarabinerCarInputRequest(
+                        type = type.toString(),
+                        address = address,
+                        title = title,
+                        content = content,
+                        phoneNo = phoneNo,
+                        name = name,
+                        email = email,
+                        carNo = carNo
+                    )
+                    ).reportId
+                }
+            }.onSuccess {
+                declarationDao.insertMember(
+                    DeclarationEntity(
+                        title = title,
+                        description = content,
+                        declarationId = it,
+                        category = type,
+                        image = image,
+                        location = address,
+                        date = LocalDateTime.now()
+                    )
+                )
+                _sideEffect.send(CamSideEffect.SuccessResultPost)
+            }.onFailure {
+
+            }
+        }
     }
 }
 

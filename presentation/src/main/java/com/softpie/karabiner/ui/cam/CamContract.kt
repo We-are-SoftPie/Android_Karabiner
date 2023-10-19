@@ -13,6 +13,7 @@ data class CamState (
 
 
 sealed class CamSideEffect() {
+    object SuccessResultPost : CamSideEffect()
     data class LoadFailed(val throwable: Throwable): CamSideEffect()
 
 }

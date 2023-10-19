@@ -213,8 +213,7 @@ fun LogInfoScreen(
                 Spacer(modifier = Modifier.height(7.dp))
                 Image(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(176.dp),
+                        .fillMaxSize(),
                     painter = BitmapPainter(logState.data.image!!.asImageBitmap()),
                     contentDescription = "촬영된 이미지"
                 )

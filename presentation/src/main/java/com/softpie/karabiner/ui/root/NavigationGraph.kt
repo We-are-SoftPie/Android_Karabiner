@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.softpie.karabiner.ui.cam.CamScreen
+import com.softpie.karabiner.ui.ee.EeScreen
 import com.softpie.karabiner.ui.log.LogScreen
 import com.softpie.karabiner.ui.log.info.LogInfoScreen
 import com.softpie.karabiner.ui.main.MainScreen
@@ -26,6 +27,9 @@ fun NavigationGraph(
         navController = navController,
         startDestination = getStartDestination()
     ) {
+        composable(NavGroup.Main.TEST.id) {
+            EeScreen(navController = navController)
+    }
         composable(NavGroup.Main.MAIN.id) {
             MainScreen(navController = navController)
         }
@@ -75,7 +79,7 @@ fun NavigationGraph(
     }
 }
 
-private val Start = NavGroup.Main.MAIN.id
+private val Start = NavGroup.Main.TEST.id//Auth.LAUNCH.id
 
 fun getStartDestination() =
     /*if (enableAutoLogin) NavGroup.Main.MAIN.id else */Start

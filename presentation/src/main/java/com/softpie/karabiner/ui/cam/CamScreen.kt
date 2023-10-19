@@ -1,6 +1,8 @@
 package com.softpie.karabiner.ui.cam
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -8,7 +10,8 @@ import android.graphics.ImageFormat
 import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.YuvImage
-import android.media.Image
+import android.location.Geocoder
+import android.location.LocationManager
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
@@ -32,14 +35,23 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,8 +61,12 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -62,36 +78,193 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.LocationServices
 import com.softpie.karabiner.R
+import com.softpie.karabiner.component.button.ButtonType
+import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.loading.LoadInFullScreen
+import com.softpie.karabiner.component.select.KarabinerButtonSelectMenu
 import com.softpie.karabiner.component.textfield.KarabinerTextField
 import com.softpie.karabiner.component.theme.BoldBody
 import com.softpie.karabiner.component.theme.BoldHeadline
+import com.softpie.karabiner.component.theme.BoldTitle
 import com.softpie.karabiner.component.theme.Headline
+import com.softpie.karabiner.component.theme.KarabinerTheme
+import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.Title
 import com.softpie.karabiner.utiles.TAG
+import com.softpie.karabiner.utiles.collectAsSideEffect
+import com.softpie.karabiner.utiles.getCategoryName
+import com.softpie.karabiner.utiles.getCategoryNumber
 import com.softpie.karabiner.utiles.shortToast
 import kotlinx.coroutines.delay
 import java.io.ByteArrayOutputStream
+import java.security.AccessController.getContext
+import java.util.Locale
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CamScreen(
     navController: NavController,
-    camViewModel: CamViewModel = viewModel()
+    camViewModel: CamViewModel = viewModel(),
+    bottomNavVisible: (Boolean) -> Unit = {}
 ) {
+    
+
+    // 관리
+    val camState = camViewModel.uiState.collectAsState().value
+
     // 카메라
     val context = LocalContext.current
-    val camState = camViewModel.uiState.collectAsState().value
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
 
-    // 페이지 관리
-    var nowPage = camState.nowPage //by remember { mutableIntStateOf(0) }
-    var camImage by remember { mutableStateOf(context.getDrawable(R.drawable.ic_cam)!!.toBitmap()) }
-    var textPage = camState.textPage
 
-    //
+//    LaunchedEffect(true) {
+//        launcher.launch(Manifest.permission.READ_PHONE_NUMBERS)
+//    }
+    // 페이지 관리
+    val nowPage = camState.nowPage //by remember { mutableIntStateOf(0) }
+    var camImage by remember { mutableStateOf(context.getDrawable(R.drawable.ic_cam)!!.toBitmap()) }
+    val textPage = camState.textPage
+
+    var title by remember { mutableStateOf("") }
+    var content by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var carNo by remember { mutableStateOf("") }
+    var tag by remember { mutableIntStateOf(0) }
+    var showDialog by remember { mutableStateOf(false) }
+
+
+    // 위치
+    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        val permissionGranted = permissions.values.reduce { aac, isPermissionGranted ->
+            Log.d(TAG, "CamScreen: $aac $isPermissionGranted")
+            aac == isPermissionGranted
+        }
+
+//        Log.d("TAG", "Signup: $it")
+//        if (!it) { return@rememberLauncherForActivityResult }
+        Log.d(TAG, "CamScreen: 여기 권환 미션받음")
+        if (permissionGranted) {
+            Log.d(TAG, "CamScreen: 여기 권환 미션받음2")
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return@rememberLauncherForActivityResult
+            }
+            fusedLocationClient.lastLocation.addOnSuccessListener {
+                Log.d(TAG, "CamScreen: 요청 성공")
+                try {
+                    val geoCoder = Geocoder(context, Locale.getDefault())
+                    val address = geoCoder.getFromLocation(it.latitude, it.longitude, 3)
+                    if (address != null) {
+//                        Log.d(TAG, "CamScreen: ${address[0].getAddressLine(0)}")
+                        location = address[0].getAddressLine(0)
+                    }
+                    Log.d(TAG, "CamScreen: $address")
+                } catch (e: Exception) {
+                    context.shortToast("위치를 불러오는 것을 실패하였습니다.")
+                }
+            }
+        } else {
+            return@rememberLauncherForActivityResult
+        }
+    }
+    LaunchedEffect(key1 = true) {
+        camViewModel.init(context)
+    }
+    LaunchedEffect(key1 = camState.data.title != "") {
+        with(camState.data) {
+            Log.d(TAG, "CamScreen: $this")
+            title = this.title
+            content = this.content
+            tag = this.tag
+        }
+    }
+    camViewModel.sideEffect.collectAsSideEffect() {
+        when(it) {
+            is CamSideEffect.LoadFailed -> {
+                context.shortToast("로딩에 실패하였습니다.")
+            }
+            is CamSideEffect.SuccessResultPost -> {
+                context.shortToast("등록에 성공하였습니다.")
+                navController.popBackStack()
+            }
+        }
+    }
+
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(horizontal = 9.dp),
+                shape = RoundedCornerShape(15.dp),
+                color = KarabinerTheme.color.White
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(28.dp))
+                    BoldTitle(text = "신고를 완료하시겠습니까?")
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Label(
+                        text = "신고가 완료되면 이메일로 안내됩니다.",
+                        textColor = KarabinerTheme.color.Gray400
+                    )
+                    Spacer(modifier = Modifier.height(40.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                            .offset(y = 3.dp)
+                    ) {
+                        KarabinerButton(
+                            modifier = Modifier.weight(1f),
+                            text = "취소",
+                            type = ButtonType.Gray,
+                            shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp)
+                        ) {
+                            showDialog = false
+                        }
+                        KarabinerButton(
+                            modifier = Modifier.weight(1f),
+                            text = "신고하기",
+                            karabinerable = true,
+                            shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp)
+                        ) {
+                            camViewModel.postResult(
+                                type = tag,
+                                address = location,
+                                title = title,
+                                content = content,
+                                carNo = carNo,
+                                image = camImage
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    // 입력 페이지 요소
     AnimatedVisibility(
         visible = permissionState.status.isGranted.not() && nowPage == 0,
         enter = fadeIn(),
@@ -122,7 +295,7 @@ fun CamScreen(
                     icon = {},
                     onClick = {
 //                        camImage = context.getDrawable(R.drawable.ic_cam)!!.toBitmap()
-//                        camViewModel.nextPage()
+//                        camViewModel.nextNowPage()
 
                         val mainExecutor = ContextCompat.getMainExecutor(context)
                         cameraController.takePicture(mainExecutor, @ExperimentalGetImage object: ImageCapture.OnImageCapturedCallback() {
@@ -299,22 +472,118 @@ fun CamScreen(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 24.dp)
+        Scaffold(
+            bottomBar = {
+                Column {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    KarabinerButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                            .padding(horizontal = 24.dp),
+                        text = "신고하기"
+                    ) {
+                        if (title.isNullOrBlank()) {
+                            context.shortToast("제목을 입력해주세요")
+                            return@KarabinerButton
+                        }
+                        if (content.isNullOrBlank()) {
+                            context.shortToast("신고 내용을 입력해주세요.")
+                            return@KarabinerButton
+                        }
+                        if (tag == 14) {
+                            context.shortToast("이외의 카테고리는 신고할 수 없습니다.")
+                            return@KarabinerButton
+                        }
+                        if (tag in 6..13) {
+                            if (carNo.isNullOrBlank()) {
+                                context.shortToast("차량번호를 입력해주세요")
+                                return@KarabinerButton
+                            }
+                        }
+                        if (location.isNullOrBlank()) {
+                            context.shortToast("제목을 입력해주세요")
+                            return@KarabinerButton
+                        }
+                        showDialog = true
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         ) {
-//            Spacer(modifier = Modifier.height(36.dp))
-//            Headline(text = "AI 자동 작성 완료,")
-//            Row {
-//                Title(text = "신고내용", karabinerable = true)
-//                Title(text = "을 확인해주세요")
-//            }
-//            Spacer(modifier = Modifier.height(36.dp))
-//            BoldBody(text = "제목")
-//            Spacer(modifier = Modifier.height(4.dp))
-//            KarabinerTextField(
-//                value = ,
-//                onValueChange =
-//            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(it)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                LaunchedEffect(key1 = true) {
+                    launcher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+                }
+                Spacer(modifier = Modifier.height(36.dp))
+                Headline(text = "AI 자동 작성 완료,")
+                Row {
+                    Title(text = "신고내용", karabinerable = true)
+                    Title(text = "을 확인해주세요")
+                }
+                Spacer(modifier = Modifier.height(36.dp))
+                BoldBody(text = "제목")
+                Spacer(modifier = Modifier.height(4.dp))
+                KarabinerTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = title,
+                    onValueChange = { title = it}
+                )
+                Spacer(modifier = Modifier.height(28.dp))
+                BoldBody(text = "내용")
+                Spacer(modifier = Modifier.height(4.dp))
+                KarabinerTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = content,
+                    onValueChange = { content = it},
+                    singleLine = false
+                )
+                Spacer(modifier = Modifier.height(28.dp))
+                BoldBody(text = "장소")
+                Spacer(modifier = Modifier.height(4.dp))
+                KarabinerTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = location,
+                    onValueChange = { location = it}
+                )
+                Spacer(modifier = Modifier.height(28.dp))
+                BoldBody(text = "카테고리")
+                Spacer(modifier = Modifier.height(4.dp))
+                KarabinerButtonSelectMenu(
+                    modifier = Modifier.height(50.dp),
+                    itemList = listOf("테스트", "소음", "테스트"),
+                    hint = camState.data.tag.getCategoryName(),
+                    onSelectItemListener = { item ->
+                        tag = item.getCategoryNumber()
+                    }
+                )
+                if (tag in 6..13) {
+                    Spacer(modifier = Modifier.height(28.dp))
+                    BoldBody(text = "차량번호")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    KarabinerTextField(
+                        modifier = Modifier.fillMaxWidth(),
+                        value = carNo,
+                        onValueChange = { carNo = it }
+                    )
+                }
+                Spacer(modifier = Modifier.height(28.dp))
+                BoldBody(text = "이미지")
+                Spacer(modifier = Modifier.height(4.dp))
+                Image(
+                    painter = BitmapPainter(
+                        image = camImage.asImageBitmap()
+                    ),
+                    contentDescription = "촬영된 이미지"
+                )
+                Spacer(modifier = Modifier.height(28.dp))
+
+            }
         }
     }
 
@@ -322,25 +591,6 @@ fun CamScreen(
 
 }
 
-private fun toBitmap(image: Image): Bitmap? {
-    val planes = image.planes
-    val yBuffer = planes[0].buffer
-    val uBuffer = planes[1].buffer
-    val vBuffer = planes[2].buffer
-    val ySize = yBuffer.remaining()
-    val uSize = uBuffer.remaining()
-    val vSize = vBuffer.remaining()
-    val nv21 = ByteArray(ySize + uSize + vSize)
-    //U and V are swapped
-    yBuffer[nv21, 0, ySize]
-    vBuffer[nv21, ySize, vSize]
-    uBuffer[nv21, ySize + vSize, uSize]
-    val yuvImage = YuvImage(nv21, ImageFormat.NV21, image.width, image.height, null)
-    val out = ByteArrayOutputStream()
-    yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 75, out)
-    val imageBytes = out.toByteArray()
-    return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-}
 
 fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap? {
     //https://developer.android.com/reference/android/media/Image.html#getFormat()
@@ -380,3 +630,4 @@ fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap? {
     }
     return null
 }
+

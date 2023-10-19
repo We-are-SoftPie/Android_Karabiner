@@ -72,7 +72,7 @@ fun SplashScreen(navController: NavController) {
             if (karabinerSharedPreferences.myName == "" ) NavGroup.Auth.NAME.id
             else if(karabinerSharedPreferences.myTel == "") NavGroup.Auth.TEL.id
             else if(karabinerSharedPreferences.myEmail == "") NavGroup.Auth.EMAIL.id
-            else NavGroup.Main.LIST.id
+            else NavGroup.Main.MAIN.id
         if (target != null) {
             navController.navigate(target) {
                 popUpTo(NavGroup.Auth.LAUNCH.id) { inclusive = true}

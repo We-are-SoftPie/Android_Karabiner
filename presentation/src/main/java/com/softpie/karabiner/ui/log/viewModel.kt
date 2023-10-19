@@ -9,6 +9,7 @@ import com.softpie.karabiner.local.room.KarabinerDatabase
 import com.softpie.karabiner.local.room.toModels
 import com.softpie.karabiner.local.sharedpreferences.KarabinerSharedPreferences
 import com.softpie.karabiner.utiles.launchIO
+import com.softpie.karabiner.utiles.toByteArray
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
