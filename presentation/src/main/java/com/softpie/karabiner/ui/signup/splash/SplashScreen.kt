@@ -1,17 +1,10 @@
 package com.softpie.karabiner.ui.signup.splash
 
-import android.util.Log
-import android.view.animation.OvershootInterpolator
-import android.window.SplashScreen
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,8 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -37,14 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import com.softpie.karabiner.R
-import com.softpie.karabiner.component.theme.Body
 import com.softpie.karabiner.component.theme.KarabinerTheme
 import com.softpie.karabiner.component.theme.gradient
 import com.softpie.karabiner.local.sharedpreferences.KarabinerSharedPreferences
 import com.softpie.karabiner.ui.root.NavGroup
-import com.softpie.karabiner.utiles.TAG
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalTextApi::class)
