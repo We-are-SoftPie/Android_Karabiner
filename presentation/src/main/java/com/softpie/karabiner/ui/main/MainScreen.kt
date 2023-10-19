@@ -1,8 +1,6 @@
 package com.softpie.karabiner.ui.main
 
 import android.util.Log
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -11,14 +9,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.softpie.karabiner.ui.cam.CamScreen
+import com.softpie.karabiner.ui.root.MainViewModel
 import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 
@@ -51,7 +46,9 @@ fun MainScreen(
                 when (state.selectedTab) {
                     NavGroup.Main.CAM -> CamScreen(navController = navController)
 
-                    else -> {}
+                    else -> {
+
+                    }
                 }
             }
         }

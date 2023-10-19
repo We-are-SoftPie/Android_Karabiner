@@ -21,7 +21,8 @@ import com.softpie.karabiner.ui.signup.tel.SignupTelScreen
 
 @Composable
 fun NavigationGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    bottomVisible: (Boolean) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -46,16 +47,18 @@ fun NavigationGraph(
             SignupCompleteScreen(navController = navController)
         }
         composable(NavGroup.Auth.LAUNCH.id) {
+            bottomVisible(false)
             SplashScreen(navController = navController)
         }
         composable(NavGroup.Main.CAM.id) {
-            CamScreen(navController = navController)
+            CamScreen(navController = navController, bottomNavVisible = bottomVisible)
         }
         navigation(
             startDestination = NavGroup.Main.LIST.id,
             route = NavGroup.Main.LIST.group
         ){
             composable(NavGroup.Main.LIST.id) {
+                bottomVisible(true)
                 LogScreen(navController = navController)
             }
             composable(
@@ -68,6 +71,7 @@ fun NavigationGraph(
             ) {entry ->
                 val ids = entry.arguments?.getString("id")
                 ids?.let {
+                    bottomVisible(true)
                     LogInfoScreen(
                         navController = navController,
                         id = it.toInt()
@@ -79,7 +83,7 @@ fun NavigationGraph(
     }
 }
 
-private val Start = NavGroup.Main.TEST.id//Auth.LAUNCH.id
+private val Start = NavGroup.Auth.LAUNCH.id//Auth.LAUNCH.id
 
 fun getStartDestination() =
     /*if (enableAutoLogin) NavGroup.Main.MAIN.id else */Start

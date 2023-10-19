@@ -1,10 +1,7 @@
-package com.softpie.karabiner.ui.main
+package com.softpie.karabiner.ui.root
 
-import android.util.Log
 import androidx.compose.runtime.Stable
 import com.softpie.karabiner.ui.base.BaseViewModel
-import com.softpie.karabiner.ui.root.NavGroup
-import com.softpie.karabiner.utiles.TAG
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Stable
