@@ -1,4 +1,4 @@
-package com.softpie.karabiner.ui.main
+package com.softpie.karabiner.ui.root
 
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,7 +26,6 @@ import com.softpie.karabiner.component.button.KarabinerBottomButton
 import com.softpie.karabiner.component.button.KarabinerIconBottomButton
 import com.softpie.karabiner.component.modifier.karaOuterShadow
 import com.softpie.karabiner.component.theme.KarabinerColor
-import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 
 private val navHorizontalMargin = 16.dp
@@ -47,7 +47,13 @@ fun MainBottomNavigation(
         "에에에에에에엥",
         "설정"
     )
-
+    var isThat by remember { mutableStateOf(false) }
+    LaunchedEffect(key1 = selectedTab) {
+        if (selectedTab != NavGroup.Main.CAM) {
+            isThat = false
+            Log.d(TAG, "MainBottomNavigation: 카메라 초기화")
+        }
+    }
     val scale by animateFloatAsState(targetValue = if (selectedTab == NavGroup.Main.CAM) 1.1f else 1f, label = "")
 
     Box {
@@ -100,8 +106,22 @@ fun MainBottomNavigation(
                 iconId = R.drawable.ic_cam,
                 karabinerable = selectedTab == NavGroup.Main.CAM
             ) {
-                if (selectedTab == NavGroup.Main.CAM)
-                    Log.d(TAG, "MainBottomNavigation: ")
+//                if (selectedTab == NavGroup.Main.CAM) {
+                Log.d(TAG, "MainBottomNavigation: 선택된 탭")
+                if (isThat) {
+                    Log.d(TAG, "MainBottomNavigation: 콜백 시도")
+                    camCallback()
+                } else {
+                    Log.d(TAG, "MainBottomNavigation: isThat = true")
+                    isThat = true
+                }
+//                }
+//                        false
+//                    } else {
+//                        Log.d(TAG, "MainBottomNavigation: test")
+//                        true
+//                    }
+                Log.d(TAG, "MainBottomNavigation: ")
                 selectedTabCallback(NavGroup.Main.CAM)
             }
             Spacer(modifier = Modifier.weight(1f))

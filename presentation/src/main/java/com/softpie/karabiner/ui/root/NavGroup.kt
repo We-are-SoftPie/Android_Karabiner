@@ -17,6 +17,7 @@ sealed class NavGroup(val group: String) {
         object CAM: Main("cam", R.drawable.ic_cam)
         object SET: Main("my", R.drawable.ic_set)
         object LIST_IFNO: Main("homeInfo/{id}", R.drawable.ic_list)
+        object TEST: Main("ee", -1)
     }
 
 //    sealed class Feature(val id: String, val title: String) : NavGroup("feature") {

@@ -73,7 +73,7 @@ fun SignupCompleteScreen(
             while (navController.popBackStack()) {
 
             }
-            navController.navigate(NavGroup.Main.LIST.id) {
+            navController.navigate(NavGroup.Main.MAIN.id) {
                 popUpTo(NavGroup.Auth.COMPLETE.id) {
                     inclusive = true
                 }

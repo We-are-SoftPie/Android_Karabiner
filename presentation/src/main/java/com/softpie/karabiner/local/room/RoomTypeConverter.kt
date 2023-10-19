@@ -27,7 +27,7 @@ class RoomTypeConverter {
     @TypeConverter
     fun toByteArray(bitmap : Bitmap) : ByteArray{
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         return outputStream.toByteArray()
     }
 

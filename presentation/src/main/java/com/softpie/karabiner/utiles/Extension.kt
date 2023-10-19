@@ -1,6 +1,8 @@
 package com.softpie.karabiner.utiles
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver
@@ -17,9 +19,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
+import androidx.room.TypeConverter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -85,7 +89,9 @@ internal fun <SIDE_EFFECT : Any> Flow<SIDE_EFFECT>.collectAsSideEffect(
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(sideEffectFlow, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(lifecycleState) {
-            sideEffectFlow.collect { sideEffect(it) }
+            sideEffectFlow.collect {
+                sideEffect(it)
+            }
         }
     }
 }
@@ -105,4 +111,21 @@ fun Int.getCategoryName(): String =
 fun LocalDateTime.toDateString(): String {
     val format = DateTimeFormatter.ofPattern("yyyy/MM/d")
     return this.format(format)
+}
+
+fun String.getCategoryNumber(): Int =
+    when (this) {
+        "소음" -> 0
+        else -> 30
+    }
+
+fun Bitmap.toByteArray() : ByteArray{
+    val outputStream = ByteArrayOutputStream()
+    this.compress(Bitmap.CompressFormat.JPEG, 20, outputStream)
+    return outputStream.toByteArray()
+}
+
+// ByteArray -> Bitmap 변환
+fun ByteArray.toBitmap() : Bitmap {
+    return BitmapFactory.decodeByteArray(this, 0, this.size)
 }

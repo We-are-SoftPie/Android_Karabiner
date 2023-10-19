@@ -38,6 +38,7 @@ fun KarabinerTextField(
     hint: String = "",
     onValueChange: (String) -> Unit,
     singleLine: Boolean = true,
+
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
@@ -55,7 +56,7 @@ fun KarabinerTextField(
             onValueChange = onValueChange,
             keyboardOptions = keyboardOptions,
             singleLine = singleLine,
-            cursorBrush = SolidColor(Black)
+            cursorBrush = SolidColor(Black),
         ) { innerTextField ->
             Box(modifier = Modifier.padding(20.dp)) {
                 innerTextField()
