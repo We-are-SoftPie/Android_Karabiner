@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.graphics.ImageFormat
 import android.graphics.Matrix
 import android.graphics.Rect
@@ -26,9 +25,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -43,6 +44,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -58,12 +61,16 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
@@ -90,9 +97,13 @@ import com.softpie.karabiner.component.theme.BoldBody
 import com.softpie.karabiner.component.theme.BoldHeadline
 import com.softpie.karabiner.component.theme.BoldTitle
 import com.softpie.karabiner.component.theme.Headline
+import com.softpie.karabiner.component.theme.KarabinerColor
 import com.softpie.karabiner.component.theme.KarabinerTheme
+import com.softpie.karabiner.component.theme.KarabinerTypography.title
 import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.Title
+import com.softpie.karabiner.component.theme.contentColorFor
+import com.softpie.karabiner.component.theme.gradient
 import com.softpie.karabiner.ui.root.MainSideEffect
 import com.softpie.karabiner.utiles.TAG
 import com.softpie.karabiner.utiles.collectAsSideEffect
@@ -269,21 +280,21 @@ fun CamScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp)
-                            .offset(y = 3.dp)
+                            .offset(y = 5.dp)
                     ) {
                         KarabinerButton(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f),
                             text = "취소",
                             type = ButtonType.Gray,
                             shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
                             showDialog = false
                         }
-                        KarabinerButton(
-                            modifier = Modifier.weight(1f),
+                        KarabinerGradientButton(
+                            modifier = Modifier
+                                .weight(1f),
                             text = "신고하기",
-                            karabinerable = true,
-                            shape = RoundedCornerShape(0.dp, 0.dp, 0.dp, 0.dp)
                         ) {
                             camViewModel.postResult(
                                 type = tag,
@@ -325,33 +336,33 @@ fun CamScreen(
 
         Scaffold(
             floatingActionButton = {
-                ExtendedFloatingActionButton(
-                    text = { Text(text = "사진찰칵")},
-                    icon = {},
-                    onClick = {
-//                        camImage = context.getDrawable(R.drawable.ic_cam)!!.toBitmap()
-//                        camViewModel.nextNowPage()
-
-                        val mainExecutor = ContextCompat.getMainExecutor(context)
-                        cameraController.takePicture(mainExecutor, @ExperimentalGetImage object: ImageCapture.OnImageCapturedCallback() {
-                            override fun onCaptureSuccess(image: ImageProxy) {
-                                Log.d("LOG", "onCaptureSuccess: ${image.height} ${image.width}")
-                                super.onCaptureSuccess(image)
-                                Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.rotationDegrees}")
-                                val bitmap = imageProxyToBitmap(image)!!
-                                val rotateMatrix = Matrix()
-                                rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
-                                camImage = Bitmap.createBitmap(bitmap, 0, 0,
-                                    bitmap.width, bitmap.height, rotateMatrix, false)
-//                                camViewModel.postImage(camImage)
-//                                camViewModel.nextPage()
-                                camViewModel.nextNowPage()
-                                Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
-                                Log.d(TAG, "onCaptureSuccess: $textPage")
-                            }
-                        })
-                    }
-                )
+//                ExtendedFloatingActionButton(
+//                    text = { Text(text = "사진찰칵")},
+//                    icon = {},
+//                    onClick = {
+////                        camImage = context.getDrawable(R.drawable.ic_cam)!!.toBitmap()
+////                        camViewModel.nextNowPage()
+//
+//                        val mainExecutor = ContextCompat.getMainExecutor(context)
+//                        cameraController.takePicture(mainExecutor, @ExperimentalGetImage object: ImageCapture.OnImageCapturedCallback() {
+//                            override fun onCaptureSuccess(image: ImageProxy) {
+//                                Log.d("LOG", "onCaptureSuccess: ${image.height} ${image.width}")
+//                                super.onCaptureSuccess(image)
+//                                Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.rotationDegrees}")
+//                                val bitmap = imageProxyToBitmap(image)!!
+//                                val rotateMatrix = Matrix()
+//                                rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
+//                                camImage = Bitmap.createBitmap(bitmap, 0, 0,
+//                                    bitmap.width, bitmap.height, rotateMatrix, false)
+////                                camViewModel.postImage(camImage)
+////                                camViewModel.nextPage()
+//                                camViewModel.nextNowPage()
+//                                Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
+//                                Log.d(TAG, "onCaptureSuccess: $textPage")
+//                            }
+//                        })
+//                    }
+//                )
             }
         ) {
             AndroidView(
@@ -359,7 +370,7 @@ fun CamScreen(
                 factory = { context ->
                 PreviewView(context).apply {
                     layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-                    setBackgroundColor(Color.BLACK)
+                    setBackgroundColor(android.graphics.Color.BLACK)
                     scaleType = PreviewView.ScaleType.FILL_START
                 }.also { previewView ->
                     previewView.controller = cameraController
@@ -666,3 +677,27 @@ fun imageProxyToBitmap(imageProxy: ImageProxy): Bitmap? {
     return null
 }
 
+
+@Composable
+private fun KarabinerGradientButton(
+    modifier: Modifier,
+    text: String,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                brush = gradient
+            ),
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.ui.graphics.Color.Transparent),
+        contentPadding = PaddingValues(vertical = 13.dp, horizontal = 24.dp),
+    ) {
+        Headline(
+            text = text,
+            textColor = KarabinerColor.White
+        )
+    }
+
+}

@@ -66,6 +66,14 @@ fun KarabinerButton(
     ) else Modifier
     Button(
         modifier = modifier
+            .background(
+                if (karabinerable) gradient else Brush.linearGradient(
+                    listOf(
+                        KarabinerColor.Transparent,
+                        KarabinerColor.Transparent
+                    )
+                )
+            )
             .then(addModifier),
         onClick = onClick,
         enabled = enabled,
@@ -85,10 +93,12 @@ fun KarabinerButton(
                             KarabinerColor.Transparent
                         )
                     )
-                )
-                .padding(contentPadding),
+                ),
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(contentPadding)
+            ) {
                 Headline(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = text,
