@@ -20,7 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
@@ -149,6 +151,7 @@ fun LogInfoScreen(
                 modifier = Modifier
                     .padding(it)
                     .padding(horizontal = 24.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Label(text = logState.data.date.toDateString())
