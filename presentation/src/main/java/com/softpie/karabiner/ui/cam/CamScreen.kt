@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -219,6 +220,7 @@ fun CamScreen(
                 context.shortToast("등록에 성공하였습니다.")
                 navController.popBackStack()
             }
+            else -> {}
         }
     }
     LaunchedEffect(key1 = capture == true) {
@@ -334,37 +336,7 @@ fun CamScreen(
         exit = fadeOut()
     ) {
 
-        Scaffold(
-            floatingActionButton = {
-//                ExtendedFloatingActionButton(
-//                    text = { Text(text = "사진찰칵")},
-//                    icon = {},
-//                    onClick = {
-////                        camImage = context.getDrawable(R.drawable.ic_cam)!!.toBitmap()
-////                        camViewModel.nextNowPage()
-//
-//                        val mainExecutor = ContextCompat.getMainExecutor(context)
-//                        cameraController.takePicture(mainExecutor, @ExperimentalGetImage object: ImageCapture.OnImageCapturedCallback() {
-//                            override fun onCaptureSuccess(image: ImageProxy) {
-//                                Log.d("LOG", "onCaptureSuccess: ${image.height} ${image.width}")
-//                                super.onCaptureSuccess(image)
-//                                Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.rotationDegrees}")
-//                                val bitmap = imageProxyToBitmap(image)!!
-//                                val rotateMatrix = Matrix()
-//                                rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
-//                                camImage = Bitmap.createBitmap(bitmap, 0, 0,
-//                                    bitmap.width, bitmap.height, rotateMatrix, false)
-////                                camViewModel.postImage(camImage)
-////                                camViewModel.nextPage()
-//                                camViewModel.nextNowPage()
-//                                Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
-//                                Log.d(TAG, "onCaptureSuccess: $textPage")
-//                            }
-//                        })
-//                    }
-//                )
-            }
-        ) {
+        Scaffold {
             AndroidView(
                 modifier = Modifier.padding(it),
                 factory = { context ->
@@ -412,13 +384,18 @@ fun CamScreen(
         )
     }
     AnimatedVisibility(
+        modifier = Modifier
+            .fillMaxSize(),
         visible = permissionState.status.isGranted && nowPage == 2,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
         val lottieAnime by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
         Column(
-            modifier = Modifier.padding(top = 280.dp)
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LottieAnimation(
                 modifier = Modifier
@@ -443,8 +420,7 @@ fun CamScreen(
             Box {
                 this@Column.AnimatedVisibility(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
+                        .fillMaxWidth(),
                     visible = permissionState.status.isGranted && textPage == 0,
                     enter = fadeIn(),
                     exit = fadeOut()
@@ -469,8 +445,7 @@ fun CamScreen(
                 }
                 this@Column.AnimatedVisibility(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
+                        .fillMaxWidth(),
                     visible = permissionState.status.isGranted && textPage == 2,
                     enter = fadeIn(),
                     exit = fadeOut()
@@ -495,8 +470,7 @@ fun CamScreen(
                 }
                 this@Column.AnimatedVisibility(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Center),
+                        .fillMaxWidth(),
                     visible = permissionState.status.isGranted && textPage == 4,
                     enter = fadeIn(),
                     exit = fadeOut()
@@ -509,6 +483,7 @@ fun CamScreen(
 
                     }
                 }
+                Spacer(modifier = Modifier.height(50.dp))
 
             }
         }
