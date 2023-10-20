@@ -39,6 +39,8 @@ import androidx.navigation.NavController
 import com.softpie.karabiner.R
 import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.loading.LoadInFullScreen
+import com.softpie.karabiner.component.theme.BoldBody
+import com.softpie.karabiner.component.theme.BoldLabel
 import com.softpie.karabiner.component.theme.Headline
 import com.softpie.karabiner.component.theme.KarabinerTheme
 import com.softpie.karabiner.component.theme.Label
@@ -150,9 +152,9 @@ fun LogScreen(
                         shape = KarabinerTheme.shape.semiMiddle,
                         color = color.first
                     ) {
-                        Label(
-                            modifier = Modifier.padding(horizontal = 4.39.dp, vertical = 3.dp),
-                            text = item.category.getCategoryName(),
+                        BoldLabel(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            text = color.third,
                             textColor = color.second
                         )
                     }

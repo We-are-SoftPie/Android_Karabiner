@@ -606,7 +606,7 @@ fun CamScreen(
                         "번호판 규정 위반",
                         "불법등화, 반사판(지) 가림∙손상",
                         "불법 튜닝, 해체, 조작",
-                        "기타 자동차 안전기준 위반",
+                        "불법 주차",
                     ),
                     hint = camState.data.tag.getCategoryName(),
                     onSelectItemListener = { item ->

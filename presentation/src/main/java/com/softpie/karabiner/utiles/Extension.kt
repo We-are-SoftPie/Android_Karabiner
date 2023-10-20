@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.io.Serializable
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -96,14 +97,13 @@ internal fun <SIDE_EFFECT : Any> Flow<SIDE_EFFECT>.collectAsSideEffect(
     }
 }
 
-fun Int.getCategoryColor(): Pair<Color, Color> =
+fun Int.getCategoryColor(): Triple<Color, Color, String> =
     when (this) {
-        in 0..4 -> Pair(Color(0xFFFFE1E1), Color(0xFFFF0000))
-        5 -> Pair(Color(0xFFFFCFEF), Color(0xFFFF00A8))
-        in 6..9 -> Pair(Color(0xFFBCCBFF), Color(0xFF0B40FF))
-        in 10..12 -> Pair(Color(0xFEF5C5), Color(0xFFFFB800))
-        13 -> Pair(Color(0xFFDEE3FF), Color(0xFF2605F0))
-        else -> Pair(Color(0xFFFFCFEF), Color(0xFFFF00A8))
+        in 0..4 -> Triple(Color(0xFFFFE1E1), Color(0xFFFF0000), "생활 불편")
+        5 -> Triple(Color(0xFFFFCFEF), Color(0xFFFF00A8), "기타 신고")
+        in 6..9 -> Triple(Color(0xFFBCCBFF), Color(0xFF0B40FF), "교통 위반")
+        in 10..13 -> Triple(Color(0xFFFEF5C5), Color(0xFFFFB800), "교통 변형")
+        else -> Triple(Color(0xFFFFCFEF), Color(0xFFFF00A8), "생활 불편")
     }
 
 fun Int.getCategoryName(): String =
@@ -121,7 +121,7 @@ fun Int.getCategoryName(): String =
         10 -> "번호판 규정 위반"
         11 -> "불법등화, 반사판(지) 가림∙손상"
         12 -> "불법 튜닝, 해체, 조작"
-        13 -> "기타 자동차 안전기준 위반"
+        13 -> "불법 주차"
         else -> "이외"
     }
 
@@ -145,7 +145,7 @@ fun String.getCategoryNumber(): Int =
         "번호판 규정 위반" -> 10
         "불법등화, 반사판(지) 가림∙손상" -> 11
         "불법 튜닝, 해체, 조작" -> 12
-        "기타 자동차 안전기준 위반" -> 13
+        "불법 주차" -> 13
         else -> 30
     }
 

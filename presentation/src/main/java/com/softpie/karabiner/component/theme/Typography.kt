@@ -443,5 +443,46 @@ fun BoldTitle(
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun BoldLabel(
+    modifier: Modifier = Modifier,
+    text: String,
+    karabinerable: Boolean = false,
+    textColor: Color = LocalContentColor.current,
+    textAlign: TextAlign = TextAlign.Start,
+    textDecoration: TextDecoration? = null,
+    textOverflow: TextOverflow = TextOverflow.Clip,
+    interactionSource: MutableInteractionSource = MutableInteractionSource(),
+    rippleColor: Color = Color.Unspecified,
+    rippleEnable: Boolean = false,
+    bounded: Boolean = true,
+    softWrap: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    onClick: (() -> Unit)? = null,
+) {
+    val style = if (karabinerable) KarabinerTypography.label.copy(brush = gradient, fontWeight = FontWeight.Bold)
+    else KarabinerTypography.label.copy(fontWeight = FontWeight.Bold)
+    Text(
+        modifier = modifier.karaClickable(
+            onClick = onClick,
+            interactionSource = interactionSource,
+            rippleColor = rippleColor,
+            rippleEnable = rippleEnable,
+            bounded = bounded
+        ),
+        text = text,
+        style = style,
+        color = textColor,
+        textAlign = textAlign,
+        textDecoration = textDecoration,
+        overflow = textOverflow,
+        softWrap = softWrap,
+        maxLines = maxLines,
+        onTextLayout = onTextLayout,
+    )
+}
+
 
 val LocalTypography = staticCompositionLocalOf { KarabinerTypography }
