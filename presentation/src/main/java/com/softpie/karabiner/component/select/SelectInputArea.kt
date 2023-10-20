@@ -72,65 +72,68 @@ fun KarabinerButtonSelectMenu(
     var buttonSize by remember { mutableStateOf(Size.Zero) }
     var buttonText by remember { mutableStateOf(hint) }
     val focusRequester = remember { FocusRequester() }
-    Button(
-        modifier = modifier
-            .onGloballyPositioned { coordinates ->
-                buttonSize = coordinates.size.toSize()
+    Column {
+        Button(
+            modifier = modifier
+                .onGloballyPositioned { coordinates ->
+                    buttonSize = coordinates.size.toSize()
+                }
+                .focusRequester(focusRequester),
+            colors = ButtonDefaults.buttonColors(containerColor = KarabinerTheme.color.White, contentColor = KarabinerTheme.color.Black),
+            shape = RoundedCornerShape(15.dp),
+            border = BorderStroke(1.5.dp, color = Color(0xFFC6CFD7)),
+            onClick = { isDropDownMenuExpanded = true }
+        ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Body(
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .padding(
+                            start = 0.dp
+                        ),
+                    text = buttonText
+                )
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(
+                            end = 0.dp
+                        ),
+                    painter = painterResource(id = R.drawable.ic_bottom_arrow),
+                    contentDescription = "아래 화살표"
+                )
             }
-            .focusRequester(focusRequester),
-        colors = ButtonDefaults.buttonColors(containerColor = KarabinerTheme.color.White, contentColor = KarabinerTheme.color.Black),
-        shape = RoundedCornerShape(15.dp),
-        border = BorderStroke(1.5.dp, color = Color(0xFFC6CFD7)),
-        onClick = { isDropDownMenuExpanded = true }
-    ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Body(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .padding(
-                        start = 0.dp
-                    ),
-                text = buttonText
-            )
-            Image(
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(
-                        end = 0.dp
-                    ),
-                painter = painterResource(id = R.drawable.ic_bottom_arrow),
-                contentDescription = "아래 화살표"
-            )
+
         }
 
-    }
-
-    // 3. DropDownMenu 정의
-    DropdownMenu(
-        modifier = Modifier
-            .width(
-                with(LocalDensity.current) {
-                    buttonSize.width.toDp()
-                }
-            )
-            .heightIn(max = 200.dp)
-            .background(KarabinerTheme.color.White),
-        expanded = isDropDownMenuExpanded,
-        onDismissRequest = { isDropDownMenuExpanded = false }
-    ) {
-        itemList.forEachIndexed { index, label ->
-            DropdownMenuItem(
-                text = {
-                    Body(text = label)
-                },
-                onClick = {
-                    buttonText = label
-                    onSelectItemListener(label)
-                    isDropDownMenuExpanded = false
-                }
-            )
+        // 3. DropDownMenu 정의
+        DropdownMenu(
+            modifier = Modifier
+                .width(
+                    with(LocalDensity.current) {
+                        buttonSize.width.toDp()
+                    }
+                )
+                .heightIn(max = 200.dp)
+                .background(KarabinerTheme.color.White),
+            expanded = isDropDownMenuExpanded,
+            onDismissRequest = { isDropDownMenuExpanded = false }
+        ) {
+            itemList.forEachIndexed { index, label ->
+                DropdownMenuItem(
+                    text = {
+                        Body(text = label)
+                    },
+                    onClick = {
+                        buttonText = label
+                        onSelectItemListener(label)
+                        isDropDownMenuExpanded = false
+                    }
+                )
+            }
         }
     }
+
 }
 
 
