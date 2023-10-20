@@ -98,13 +98,30 @@ internal fun <SIDE_EFFECT : Any> Flow<SIDE_EFFECT>.collectAsSideEffect(
 
 fun Int.getCategoryColor(): Pair<Color, Color> =
     when (this) {
-        0 -> Pair(Color(0xFFDEE3FF), Color(0xFF2605F0))
-        else -> Pair(Color(0xFFDEE3FF), Color(0xFF2605F0))
+        in 0..4 -> Pair(Color(0xFFFFE1E1), Color(0xFFFF0000))
+        5 -> Pair(Color(0xFFFFCFEF), Color(0xFFFF00A8))
+        in 6..9 -> Pair(Color(0xFFBCCBFF), Color(0xFF0B40FF))
+        in 10..12 -> Pair(Color(0xFEF5C5), Color(0xFFFFB800))
+        13 -> Pair(Color(0xFFDEE3FF), Color(0xFF2605F0))
+        else -> Pair(Color(0xFFFFCFEF), Color(0xFFFF00A8))
     }
 
 fun Int.getCategoryName(): String =
     when (this) {
-        0 -> "소음"
+        0 -> "불법광고물"
+        1 -> "자전거/이륜차 방치 및 불편"
+        2 -> "쓰레기, 폐기물"
+        3 -> "해양쓰레기"
+        4 -> "불법 숙박"
+        5 -> "기타 생활불편"
+        6 -> "교통위반"
+        7 -> "이륜차 위반"
+        8 -> "적재물 추락방지, 중량∙용량 위반"
+        9 -> "버스전용차로 위반"
+        10 -> "번호판 규정 위반"
+        11 -> "불법등화, 반사판(지) 가림∙손상"
+        12 -> "불법 튜닝, 해체, 조작"
+        13 -> "기타 자동차 안전기준 위반"
         else -> "이외"
     }
 
@@ -115,7 +132,20 @@ fun LocalDateTime.toDateString(): String {
 
 fun String.getCategoryNumber(): Int =
     when (this) {
-        "소음" -> 0
+        "불법광고물" -> 0
+        "자전거/이륜차 방치 및 불편" -> 1
+        "쓰레기, 폐기물" -> 2
+        "해양쓰레기" ->3
+        "불법 숙박" -> 4
+        "기타 생활불편" -> 5
+        "교통위반" -> 6
+        "이륜차 위반" -> 7
+        "적재물 추락방지, 중량∙용량 위반" -> 8
+        "버스전용차로 위반" -> 9
+        "번호판 규정 위반" -> 10
+        "불법등화, 반사판(지) 가림∙손상" -> 11
+        "불법 튜닝, 해체, 조작" -> 12
+        "기타 자동차 안전기준 위반" -> 13
         else -> 30
     }
 

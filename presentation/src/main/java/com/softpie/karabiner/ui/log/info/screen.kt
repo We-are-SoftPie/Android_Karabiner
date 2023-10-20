@@ -181,7 +181,8 @@ fun LogInfoScreen(
                             Label(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 text = logState.data.category.getCategoryName(),
-                                textColor = color.second
+                                textColor = color.second,
+                                maxLines = 1
                             )
                         }
                     }

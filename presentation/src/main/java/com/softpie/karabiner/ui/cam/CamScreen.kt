@@ -592,7 +592,22 @@ fun CamScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 KarabinerButtonSelectMenu(
                     modifier = Modifier.height(50.dp),
-                    itemList = listOf("테스트", "소음", "테스트"),
+                    itemList = listOf(
+                        "불법광고물",
+                        "자전거/이륜차 방치 및 불편",
+                        "쓰레기, 폐기물",
+                        "해양쓰레기",
+                        "불법 숙박",
+                        "기타 생활불편",
+                        "교통위반",
+                        "이륜차 위반",
+                        "적재물 추락방지, 중량∙용량 위반",
+                        "버스전용차로 위반",
+                        "번호판 규정 위반",
+                        "불법등화, 반사판(지) 가림∙손상",
+                        "불법 튜닝, 해체, 조작",
+                        "기타 자동차 안전기준 위반",
+                    ),
                     hint = camState.data.tag.getCategoryName(),
                     onSelectItemListener = { item ->
                         tag = item.getCategoryNumber()
