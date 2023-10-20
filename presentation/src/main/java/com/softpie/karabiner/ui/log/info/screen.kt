@@ -202,7 +202,7 @@ fun LogInfoScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 Label(
                     modifier = Modifier.fillMaxWidth(),
-                    text = "설명",
+                    text = logState.data.description,
                     textColor = KarabinerTheme.color.Gray400
                 )
                 Spacer(modifier = Modifier.height(28.dp))
