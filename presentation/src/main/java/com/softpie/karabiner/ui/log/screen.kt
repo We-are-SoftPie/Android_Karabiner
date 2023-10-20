@@ -117,25 +117,7 @@ fun LogScreen(
                     Title(text = "건 신고하셨네요!")
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                Row {
-                    KarabinerButton(text = "더미") {
-                        val drawable = context.getDrawable(R.drawable.ic_logo)!!
-                        val bitmap = drawable.toBitmap()
-//                    val dummyIcon = BitmapFactory.decodeResource(context.resources!!, R.drawable.ic_logo)
-                        Log.d("TAG", "LogScreen: $bitmap")
-                        logViewModel.dummy(
-                            bitmap
-                        )
-                    }
-                    KarabinerButton(text = "새로고침") {
-                        logViewModel.load()
-                    }
-                    KarabinerButton(text = "이동") {
-                        navController.navigate(
-                            NavGroup.Main.CAM.id
-                        )
-                    }
-                }
+                
             }
             itemsIndexed(
                 logState.data
