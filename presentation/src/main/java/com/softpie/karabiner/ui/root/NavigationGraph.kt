@@ -14,6 +14,9 @@ import com.softpie.karabiner.ui.ee.EeScreen
 import com.softpie.karabiner.ui.log.LogScreen
 import com.softpie.karabiner.ui.log.info.LogInfoScreen
 import com.softpie.karabiner.ui.main.MainScreen
+import com.softpie.karabiner.ui.setting.SettingScreen
+import com.softpie.karabiner.ui.setting.profile.ProfileScreen
+import com.softpie.karabiner.ui.setting.profile.edit.EditScreen
 import com.softpie.karabiner.ui.signup.complete.SignupCompleteScreen
 import com.softpie.karabiner.ui.signup.email.SignupEmailScreen
 import com.softpie.karabiner.ui.signup.name.SignupNameScreen
@@ -59,6 +62,17 @@ fun NavigationGraph(
         composable(NavGroup.Main.CAM.id) {
             onChangeNav(NavGroup.Main.CAM)
             CamScreen(navController = navController, bottomNavVisible = bottomVisible, capture = capture)
+        }
+        composable(NavGroup.Main.SET.id) {
+            onChangeNav(NavGroup.Main.SET)
+            SettingScreen(navController = navController)
+        }
+        composable(NavGroup.Setting.PROFILE.id) {
+            onChangeNav(NavGroup.Main.SET)
+            ProfileScreen(navController = navController)
+        }
+        composable(NavGroup.Setting.PROFILE_EDIT.id) {
+            EditScreen(navController = navController, bottomVisible = bottomVisible)
         }
         navigation(
             startDestination = NavGroup.Main.LIST.id,

@@ -232,6 +232,7 @@ fun CamScreen(
                             //                                camViewModel.postImage(camImage)
                             //                                camViewModel.nextPage()
                             camViewModel.nextNowPage()
+                            bottomNavVisible(false)
                             Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
                             Log.d(TAG, "onCaptureSuccess: $textPage")
                         }

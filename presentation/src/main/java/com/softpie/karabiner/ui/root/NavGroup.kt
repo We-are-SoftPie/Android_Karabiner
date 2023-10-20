@@ -20,6 +20,11 @@ sealed class NavGroup(val group: String) {
         object TEST: Main("ee", -1)
     }
 
+    sealed class Setting(val id: String): NavGroup("my") {
+        object PROFILE: Setting("profile")
+        object PROFILE_EDIT: Setting("profile/edit")
+    }
+
 //    sealed class Feature(val id: String, val title: String) : NavGroup("feature") {
 //        object BOARD: Feature("board", "게시글")
 //        object POST: Feature("post", "글쓰기")
