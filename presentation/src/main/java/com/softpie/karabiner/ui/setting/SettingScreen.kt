@@ -27,6 +27,7 @@ import com.softpie.karabiner.component.theme.BoldTitle
 import com.softpie.karabiner.component.theme.KarabinerTheme
 import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.Title
+import com.softpie.karabiner.ui.root.NavGroup
 
 
 @Composable
@@ -51,7 +52,7 @@ fun SettingScreen(
                 title = "내 프로필",
                 content = "사용자 프로필을 수정합니다."
             ) {
-
+                navController.navigate(NavGroup.Setting.PROFILE.id)
             }
             Spacer(modifier = Modifier.height(20.dp))
             SettingButton(

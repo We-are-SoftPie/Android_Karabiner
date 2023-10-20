@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.softpie.karabiner.component.theme.KarabinerTheme
 import com.softpie.karabiner.utiles.TAG
@@ -96,7 +97,11 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         ) {
-                            Box(modifier = Modifier.padding(it)) {
+                            Box(modifier = Modifier.padding(
+                                    top = if (showBottomBar) 0.dp else it.calculateTopPadding(),
+                                    bottom = it.calculateBottomPadding()
+                                )
+                            ) {
                                 NavigationGraph(
                                     navController = navController,
                                     capture = capture,
