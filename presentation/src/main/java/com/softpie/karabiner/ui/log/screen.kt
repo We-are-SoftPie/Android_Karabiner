@@ -117,10 +117,10 @@ fun LogScreen(
                     Title(text = "건 신고하셨네요!")
                 }
                 Spacer(modifier = Modifier.height(24.dp))
-                
+
             }
             itemsIndexed(
-                logState.data
+                logState.data.asReversed()
             ) {index, item ->
                 Column(
                     modifier = Modifier.clickable {
