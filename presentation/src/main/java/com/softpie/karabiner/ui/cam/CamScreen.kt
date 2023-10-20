@@ -1,6 +1,7 @@
 package com.softpie.karabiner.ui.cam
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,6 +15,8 @@ import android.location.LocationManager
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.ExperimentalGetImage
@@ -151,7 +154,19 @@ fun CamScreen(
     var tag by remember { mutableIntStateOf(0) }
     var showDialog by remember { mutableStateOf(false) }
 
+    var backPressedState by remember { mutableStateOf(true) }
+    var backPressedTime = 0L
 
+    BackHandler(enabled = backPressedState) {
+        if(System.currentTimeMillis() - backPressedTime <= 400L) {
+            // 앱 종료
+            navController.popBackStack()
+        } else {
+            backPressedState = true
+            Toast.makeText(context, "한 번 더 누르시면 돌아갑니다.", Toast.LENGTH_SHORT).show()
+        }
+        backPressedTime = System.currentTimeMillis()
+    }
     // 위치
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -675,4 +690,22 @@ private fun KarabinerGradientButton(
         )
     }
 
+}
+
+@Composable
+fun BackOnPressed() {
+    val context = LocalContext.current
+    var backPressedState by remember { mutableStateOf(true) }
+    var backPressedTime = 0L
+
+    BackHandler(enabled = backPressedState) {
+        if(System.currentTimeMillis() - backPressedTime <= 400L) {
+            // 앱 종료
+            (context as Activity).finish()
+        } else {
+            backPressedState = true
+            Toast.makeText(context, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+        backPressedTime = System.currentTimeMillis()
+    }
 }
