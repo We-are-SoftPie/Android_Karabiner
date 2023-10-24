@@ -371,6 +371,9 @@ fun CamScreen(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
+        LaunchedEffect(key1 = true) {
+            bottomNavVisible(false)
+        }
 //        val rotateMatrix = Matrix()
 //        rotateMatrix.postRotate(90f)
 ////        camImage = Bitmap.createBitmap(camImage, 0, 0,
@@ -405,6 +408,9 @@ fun CamScreen(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
+        LaunchedEffect(key1 = true) {
+            bottomNavVisible(false)
+        }
         val lottieAnime by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
         Column(
             modifier = Modifier
@@ -508,6 +514,9 @@ fun CamScreen(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
+        LaunchedEffect(key1 = true) {
+            bottomNavVisible(false)
+        }
         Scaffold(
             bottomBar = {
                 Column {

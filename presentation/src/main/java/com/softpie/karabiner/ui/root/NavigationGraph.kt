@@ -65,6 +65,7 @@ fun NavigationGraph(
         }
         composable(NavGroup.Main.SET.id) {
             onChangeNav(NavGroup.Main.SET)
+            bottomVisible(true)
             SettingScreen(navController = navController)
         }
         composable(NavGroup.Setting.PROFILE.id) {
