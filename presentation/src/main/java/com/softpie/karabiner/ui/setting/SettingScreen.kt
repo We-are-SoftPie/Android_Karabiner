@@ -82,8 +82,7 @@ private fun SettingButton(
 ) {
     Button(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(60.dp),
+            .fillMaxWidth(),
         onClick = onClick,
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(containerColor = KarabinerTheme.color.Gray100),
