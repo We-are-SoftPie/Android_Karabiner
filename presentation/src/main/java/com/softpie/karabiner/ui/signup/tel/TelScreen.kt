@@ -127,6 +127,7 @@ fun SignupTelScreen(
                     end = if (keyboardShow) 0.dp else 24.dp,
                     bottom = if (keyboardShow) 0.dp else 16.dp,
                 ),
+            enabled = (value.isNotEmpty() && value.length > 1),
             text = "다음으로",
             shape = if (keyboardShow) RoundedCornerShape(0.dp) else KarabinerTheme.shape.semiLarge
         ) {
