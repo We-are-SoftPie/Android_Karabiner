@@ -176,13 +176,15 @@ fun LogInfoScreen(
                         val color = logState.data.category.getCategoryColor()
                         Surface(
                             shape = RoundedCornerShape(14.dp),
-                            color = color.first
+                            color = color.first,
+                            modifier = Modifier.padding(end = 14.dp)
                         ) {
                             Label(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 text = logState.data.category.getCategoryName(),
                                 textColor = color.second,
-                                maxLines = 1
+                                maxLines = 1,
+                                textOverflow = TextOverflow.Ellipsis
                             )
                         }
                     }
