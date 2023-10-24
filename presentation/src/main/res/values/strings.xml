@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">karabiner</string>
+    <string name="app_name">Karabiner</string>
     <string name="text_loadError">로드에 실패했어요.</string>
 </resources>
