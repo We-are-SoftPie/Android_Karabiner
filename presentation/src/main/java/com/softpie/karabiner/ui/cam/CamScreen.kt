@@ -65,11 +65,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
@@ -109,6 +111,7 @@ import com.softpie.karabiner.component.theme.Title
 import com.softpie.karabiner.component.theme.contentColorFor
 import com.softpie.karabiner.component.theme.gradient
 import com.softpie.karabiner.ui.root.MainSideEffect
+import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 import com.softpie.karabiner.utiles.collectAsSideEffect
 import com.softpie.karabiner.utiles.getCategoryName
@@ -144,7 +147,7 @@ fun CamScreen(
 //    }
     // 페이지 관리
     val nowPage = camState.nowPage //by remember { mutableIntStateOf(0) }
-    var camImage by remember { mutableStateOf(context.getDrawable(R.drawable.ic_cam)!!.toBitmap()) }
+    var camImage: Bitmap? by remember { mutableStateOf(null) }
     val textPage = camState.textPage
 
     var title by remember { mutableStateOf("") }
@@ -319,7 +322,7 @@ fun CamScreen(
                                 title = title,
                                 content = content,
                                 carNo = carNo,
-                                image = camImage
+                                image = camImage!!
                             )
                         }
                     }
@@ -389,15 +392,24 @@ fun CamScreen(
                 modifier = Modifier.padding(end = 24.dp),
                 text = "확인하기",
                 onClick = {
-                    Log.d(TAG, "CamScreen: rrrr")
-                    camViewModel.postImage(camImage)
-                    camViewModel.nextNowPage()
+                    Log.d(TAG, "CamScreen: rrrr $camImage")
+                    if (camImage != null) {
+                        camViewModel.postImage(camImage!!)
+                        camViewModel.nextNowPage()
+                    } else {
+                        context.shortToast("이미지가 정상적이지 않습니다.")
+                        navController.navigate(NavGroup.Main.LIST.id) {
+                            popUpTo(NavGroup.Main.CAM.id) {
+                                inclusive = true
+                            }
+                        }
+                    }
                 }
             )
         }
         Image(
             modifier = Modifier.fillMaxSize(),
-            painter = BitmapPainter(camImage.asImageBitmap()),
+            painter = BitmapPainter(image = camImage?.asImageBitmap()?: context.getDrawable(R.drawable.ic_logo)!!.toBitmap().asImageBitmap()),
             contentDescription = "촬영된 사진"
         )
     }
@@ -636,10 +648,11 @@ fun CamScreen(
                 BoldBody(text = "이미지")
                 Spacer(modifier = Modifier.height(4.dp))
                 Image(
+                    modifier = Modifier.clip(KarabinerTheme.shape.semiMiddle),
                     painter = BitmapPainter(
-                        image = camImage.asImageBitmap()
+                        image = camImage!!.asImageBitmap()
                     ),
-                    contentDescription = "촬영된 이미지"
+                    contentDescription = "촬영된 이미지",
                 )
                 Spacer(modifier = Modifier.height(28.dp))
 
@@ -714,22 +727,4 @@ private fun KarabinerGradientButton(
         )
     }
 
-}
-
-@Composable
-fun BackOnPressed() {
-    val context = LocalContext.current
-    var backPressedState by remember { mutableStateOf(true) }
-    var backPressedTime = 0L
-
-    BackHandler(enabled = backPressedState) {
-        if(System.currentTimeMillis() - backPressedTime <= 400L) {
-            // 앱 종료
-            (context as Activity).finish()
-        } else {
-            backPressedState = true
-            Toast.makeText(context, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
-        }
-        backPressedTime = System.currentTimeMillis()
-    }
 }

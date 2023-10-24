@@ -94,8 +94,7 @@ fun SignupEmailScreen(
                     start = if (keyboardShow) 0.dp else 24.dp,
                     end = if (keyboardShow) 0.dp else 24.dp,
                     bottom = if (keyboardShow) 0.dp else 16.dp,
-                )
-                .offset(y = if (keyboardShow) 50.dp else 0.dp),
+                ),
             text = "다음으로",
             shape = if (keyboardShow) RoundedCornerShape(0.dp) else KarabinerTheme.shape.semiLarge
         ) {
