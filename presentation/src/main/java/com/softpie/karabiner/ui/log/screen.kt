@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import com.softpie.karabiner.R
 import com.softpie.karabiner.component.button.KarabinerButton
 import com.softpie.karabiner.component.loading.LoadInFullScreen
+import com.softpie.karabiner.component.modifier.karaClickable
 import com.softpie.karabiner.component.theme.BoldBody
 import com.softpie.karabiner.component.theme.BoldLabel
 import com.softpie.karabiner.component.theme.Headline
@@ -81,6 +82,7 @@ fun LogScreen(
                 Log.e("HomeScreenError", it.exception.stackTraceToString())
 
             }
+            else -> {}
         }
     }
     LaunchedEffect(true) {
@@ -125,7 +127,7 @@ fun LogScreen(
                 logState.data.asReversed()
             ) {index, item ->
                 Column(
-                    modifier = Modifier.clickable {
+                    modifier = Modifier.karaClickable {
                         Log.d("TAG", "LogScreen: $index")
                         navController.navigate(
                             NavGroup.Main.LIST_IFNO.id.replace(

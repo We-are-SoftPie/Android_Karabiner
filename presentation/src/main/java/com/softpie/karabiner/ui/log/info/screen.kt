@@ -104,6 +104,7 @@ fun LogInfoScreen(
                 Log.e("HomeScreenError", it.exception.stackTraceToString())
 
             }
+            else -> {}
         }
     }
     LaunchedEffect(true) {
