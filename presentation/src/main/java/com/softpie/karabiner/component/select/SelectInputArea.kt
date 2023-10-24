@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.softpie.karabiner.R
 import com.softpie.karabiner.component.theme.Body
+import com.softpie.karabiner.component.theme.KarabinerColor.TextFieldStroke
 import com.softpie.karabiner.component.theme.KarabinerTheme
 
 
@@ -79,7 +80,7 @@ fun KarabinerButtonSelectMenu(
                     buttonSize = coordinates.size.toSize()
                 }
                 .focusRequester(focusRequester),
-            colors = ButtonDefaults.buttonColors(containerColor = KarabinerTheme.color.White, contentColor = KarabinerTheme.color.Black),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFFBFF), contentColor = KarabinerTheme.color.Black),
             shape = RoundedCornerShape(15.dp),
             border = BorderStroke(1.5.dp, color = Color(0xFFC6CFD7)),
             onClick = { isDropDownMenuExpanded = true }
@@ -121,6 +122,7 @@ fun KarabinerButtonSelectMenu(
         ) {
             itemList.forEachIndexed { index, label ->
                 DropdownMenuItem(
+                    modifier = Modifier.background(Color(0xFFFFFBFF)),
                     text = {
                         Body(text = label)
                     },
