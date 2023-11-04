@@ -13,7 +13,6 @@ import com.softpie.karabiner.ui.cam.CamScreen
 import com.softpie.karabiner.ui.ee.EeScreen
 import com.softpie.karabiner.ui.log.LogScreen
 import com.softpie.karabiner.ui.log.info.LogInfoScreen
-import com.softpie.karabiner.ui.main.MainScreen
 import com.softpie.karabiner.ui.setting.SettingScreen
 import com.softpie.karabiner.ui.setting.profile.ProfileScreen
 import com.softpie.karabiner.ui.setting.profile.edit.EditScreen
@@ -22,13 +21,11 @@ import com.softpie.karabiner.ui.signup.email.SignupEmailScreen
 import com.softpie.karabiner.ui.signup.name.SignupNameScreen
 import com.softpie.karabiner.ui.signup.splash.SplashScreen
 import com.softpie.karabiner.ui.signup.tel.SignupTelScreen
-import kotlinx.coroutines.flow.Flow
 
 
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    capture: Boolean,
     changePage: () -> Unit,
     onChangeNav: (NavGroup.Main) -> Unit,
     bottomVisible: (Boolean) -> Unit,
@@ -40,9 +37,6 @@ fun NavigationGraph(
         composable(NavGroup.Main.TEST.id) {
             EeScreen(navController = navController)
     }
-        composable(NavGroup.Main.MAIN.id) {
-            MainScreen(navController = navController)
-        }
         composable(NavGroup.Auth.NAME.id) {
             SignupNameScreen(navController = navController)
         }
@@ -61,7 +55,7 @@ fun NavigationGraph(
         }
         composable(NavGroup.Main.CAM.id) {
             onChangeNav(NavGroup.Main.CAM)
-            CamScreen(navController = navController, bottomNavVisible = bottomVisible, capture = capture)
+            CamScreen(navController = navController, bottomNavVisible = bottomVisible)
         }
         composable(NavGroup.Main.SET.id) {
             onChangeNav(NavGroup.Main.SET)
@@ -83,7 +77,6 @@ fun NavigationGraph(
                 bottomVisible(true)
                 changePage()
                 onChangeNav(NavGroup.Main.LIST)
-                Log.d("TAG", "NavigationGraph: 돌아옴")
                 LogScreen(navController = navController)
             }
             composable(

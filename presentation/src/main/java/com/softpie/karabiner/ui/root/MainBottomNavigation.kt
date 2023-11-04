@@ -30,6 +30,11 @@ import com.softpie.karabiner.utiles.TAG
 
 private val navHorizontalMargin = 16.dp
 
+sealed interface CamEvent {
+    object Click: CamEvent
+    object None: CamEvent
+}
+
 @Composable
 fun MainBottomNavigation(
     selectedTab: NavGroup.Main,
@@ -48,7 +53,7 @@ fun MainBottomNavigation(
         "설정"
     )
     var isThat by remember { mutableStateOf(false) }
-    LaunchedEffect(key1 = selectedTab) {
+    LaunchedEffect(selectedTab) {
         if (selectedTab != NavGroup.Main.CAM) {
             isThat = false
             Log.d(TAG, "MainBottomNavigation: 카메라 초기화")
@@ -106,38 +111,13 @@ fun MainBottomNavigation(
                 iconId = R.drawable.ic_cam,
                 karabinerable = selectedTab == NavGroup.Main.CAM
             ) {
-//                if (selectedTab == NavGroup.Main.CAM) {
-                Log.d(TAG, "MainBottomNavigation: 선택된 탭")
-                if (isThat) {
-                    Log.d(TAG, "MainBottomNavigation: 콜백 시도")
+                if (selectedTab == NavGroup.Main.CAM) {
                     camCallback()
-                } else {
-                    Log.d(TAG, "MainBottomNavigation: isThat = true")
-                    isThat = true
                 }
-//                }
-//                        false
-//                    } else {
-//                        Log.d(TAG, "MainBottomNavigation: test")
-//                        true
-//                    }
-                Log.d(TAG, "MainBottomNavigation: ")
                 selectedTabCallback(NavGroup.Main.CAM)
             }
             Spacer(modifier = Modifier.weight(1f))
         }
 
     }
-}
-
-
-@Preview
-@Composable
-fun BottomNavigation() {
-    var selectedTab by remember {
-        mutableStateOf<NavGroup.Main>(NavGroup.Main.LIST)
-    }
-    MainBottomNavigation(selectedTab = selectedTab, selectedTabCallback = {
-        selectedTab = it
-    }) {}
 }

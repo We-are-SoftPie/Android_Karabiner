@@ -1,8 +1,6 @@
 package com.softpie.karabiner.ui.cam
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,7 +9,6 @@ import android.graphics.Matrix
 import android.graphics.Rect
 import android.graphics.YuvImage
 import android.location.Geocoder
-import android.location.LocationManager
 import android.util.Log
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
@@ -36,24 +33,19 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -66,17 +58,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
@@ -105,12 +90,11 @@ import com.softpie.karabiner.component.theme.BoldTitle
 import com.softpie.karabiner.component.theme.Headline
 import com.softpie.karabiner.component.theme.KarabinerColor
 import com.softpie.karabiner.component.theme.KarabinerTheme
-import com.softpie.karabiner.component.theme.KarabinerTypography.title
 import com.softpie.karabiner.component.theme.Label
 import com.softpie.karabiner.component.theme.Title
-import com.softpie.karabiner.component.theme.contentColorFor
 import com.softpie.karabiner.component.theme.gradient
-import com.softpie.karabiner.ui.root.MainSideEffect
+import com.softpie.karabiner.ui.root.CamEvent
+import com.softpie.karabiner.ui.root.ClickComposableLocalStatic
 import com.softpie.karabiner.ui.root.NavGroup
 import com.softpie.karabiner.utiles.TAG
 import com.softpie.karabiner.utiles.collectAsSideEffect
@@ -118,9 +102,7 @@ import com.softpie.karabiner.utiles.getCategoryName
 import com.softpie.karabiner.utiles.getCategoryNumber
 import com.softpie.karabiner.utiles.shortToast
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import java.io.ByteArrayOutputStream
-import java.security.AccessController.getContext
 import java.util.Locale
 
 
@@ -129,7 +111,6 @@ import java.util.Locale
 fun CamScreen(
     navController: NavController,
     camViewModel: CamViewModel = viewModel(),
-    capture: Boolean,
     bottomNavVisible: (Boolean) -> Unit = {}
 ) {
     // 관리
@@ -140,13 +121,9 @@ fun CamScreen(
     val permissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraController = remember { LifecycleCameraController(context)}
-    val isCapture by rememberUpdatedState(newValue = capture)
-    Log.d(TAG, "CamScreen: $isCapture")
-//    LaunchedEffect(true) {
-//        launcher.launch(Manifest.permission.READ_PHONE_NUMBERS)
-//    }
+
     // 페이지 관리
-    val nowPage = camState.nowPage //by remember { mutableIntStateOf(0) }
+    val nowPage = camState.nowPage
     var camImage: Bitmap? by remember { mutableStateOf(null) }
     val textPage = camState.textPage
 
@@ -178,8 +155,6 @@ fun CamScreen(
             aac == isPermissionGranted
         }
 
-//        Log.d("TAG", "Signup: $it")
-//        if (!it) { return@rememberLauncherForActivityResult }
         Log.d(TAG, "CamScreen: 여기 권환 미션받음")
         if (permissionGranted) {
             Log.d(TAG, "CamScreen: 여기 권환 미션받음2")
@@ -191,13 +166,6 @@ fun CamScreen(
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return@rememberLauncherForActivityResult
             }
             fusedLocationClient.lastLocation.addOnSuccessListener {
@@ -229,7 +197,7 @@ fun CamScreen(
             tag = this.tag
         }
     }
-    camViewModel.sideEffect.collectAsSideEffect() {
+    camViewModel.sideEffect.collectAsSideEffect {
         when(it) {
             is CamSideEffect.LoadFailed -> {
                 context.shortToast("로딩에 실패하였습니다.")
@@ -238,39 +206,45 @@ fun CamScreen(
                 context.shortToast("등록에 성공하였습니다.")
                 navController.popBackStack()
             }
-            else -> {}
         }
     }
-    LaunchedEffect(key1 = capture == true) {
+
+    val localClick = ClickComposableLocalStatic.current
+
+    LaunchedEffect(cameraController, localClick) {
         try {
-            if (capture && cameraController.isImageCaptureEnabled) {
-                Log.d(TAG, "CamScreen: qwewqeqwewqe 호출됨")
-                val mainExecutor = ContextCompat.getMainExecutor(context)
-                cameraController.takePicture(
-                    mainExecutor,
-                    @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
-                        override fun onCaptureSuccess(image: ImageProxy) {
-                            Log.d("LOG", "onCaptureSuccess: ${image.height} ${image.width}")
-                            super.onCaptureSuccess(image)
-                            Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.rotationDegrees}")
-                            val bitmap = imageProxyToBitmap(image)!!
-                            val rotateMatrix = Matrix()
-                            rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
-                            camImage = Bitmap.createBitmap(
-                                bitmap, 0, 0,
-                                bitmap.width, bitmap.height, rotateMatrix, false
-                            )
-                            //                                camViewModel.postImage(camImage)
-                            //                                camViewModel.nextPage()
-                            camViewModel.nextNowPage()
-                            bottomNavVisible(false)
-                            Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
-                            Log.d(TAG, "onCaptureSuccess: $textPage")
-                        }
-                    })
+            if (cameraController.isImageCaptureEnabled) {
+                if (localClick == CamEvent.Click) {
+                    Log.d(TAG, "enable - CamScreen() called")
+                    val mainExecutor = ContextCompat.getMainExecutor(context)
+                    cameraController.takePicture(
+                        mainExecutor,
+                        @ExperimentalGetImage object : ImageCapture.OnImageCapturedCallback() {
+                            override fun onCaptureSuccess(image: ImageProxy) {
+                                Log.d("LOG", "onCaptureSuccess: ${image.height} ${image.width}")
+                                super.onCaptureSuccess(image)
+                                Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.rotationDegrees}")
+                                val bitmap = imageProxyToBitmap(image)!!
+                                val rotateMatrix = Matrix()
+                                rotateMatrix.postRotate(image.imageInfo.rotationDegrees.toFloat())
+                                camImage = Bitmap.createBitmap(
+                                    bitmap, 0, 0,
+                                    bitmap.width, bitmap.height, rotateMatrix, false
+                                )
+                                camViewModel.nextNowPage()
+                                bottomNavVisible(false)
+                                Log.d(TAG, "onCaptureSuccess: ${camState.textPage}")
+                                Log.d(TAG, "onCaptureSuccess: $textPage")
+                            }
+                        })
+                } else {
+                    Log.d(TAG, "not click - CamScreen() called")
+                }
+            } else {
+                Log.d(TAG, "not enable - CamScreen() called")
             }
         } catch (e: java.lang.Exception) {
-            Log.d(TAG, "CamScreen: 알파노")
+            Log.d(TAG, "${e.message} - CamScreen() called")
         }
     }
 
@@ -377,10 +351,7 @@ fun CamScreen(
         LaunchedEffect(key1 = true) {
             bottomNavVisible(false)
         }
-//        val rotateMatrix = Matrix()
-//        rotateMatrix.postRotate(90f)
-////        camImage = Bitmap.createBitmap(camImage, 0, 0,
-////            camImage.width, camImage.height, rotateMatrix, false)
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -392,7 +363,6 @@ fun CamScreen(
                 modifier = Modifier.padding(end = 24.dp),
                 text = "확인하기",
                 onClick = {
-                    Log.d(TAG, "CamScreen: rrrr $camImage")
                     if (camImage != null) {
                         camViewModel.postImage(camImage!!)
                         camViewModel.nextNowPage()
@@ -420,7 +390,7 @@ fun CamScreen(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        LaunchedEffect(key1 = true) {
+        LaunchedEffect(true) {
             bottomNavVisible(false)
         }
         val lottieAnime by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
