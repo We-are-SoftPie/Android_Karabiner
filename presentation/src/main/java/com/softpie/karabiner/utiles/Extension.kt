@@ -82,7 +82,7 @@ internal fun ViewModel.launchIO(action: suspend () -> Unit) {
 }
 
 @Composable
-internal fun <SIDE_EFFECT : Any> Flow<SIDE_EFFECT>.collectAsSideEffect(
+internal fun <SIDE_EFFECT> Flow<SIDE_EFFECT>.collectAsSideEffect(
     lifecycleState: Lifecycle.State = Lifecycle.State.STARTED,
     sideEffect: (suspend (sideEffect: SIDE_EFFECT) -> Unit)
 ) {

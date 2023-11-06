@@ -23,7 +23,7 @@ class RetrofitBuilder {
         private var instance: Retrofit? = null
         private var karabinerService: KarabinerService? = null
         @Synchronized
-        fun getInstance(): Retrofit {
+        private fun getInstance(): Retrofit {
             if (instance == null) {
                 val interceptor = HttpLoggingInterceptor()
                 interceptor.level = HttpLoggingInterceptor.Level.BODY
